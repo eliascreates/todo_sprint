@@ -1,6 +1,14 @@
 class ServerException implements Exception {
   const ServerException();
 }
+class CacheException implements Exception {
+  const CacheException();
+}
+
+
+class NotFoundException implements Exception {
+  const NotFoundException();
+}
 
 class NetworkException implements Exception {
   const NetworkException();

@@ -2,18 +2,18 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
-import 'package:todo_sprint/features/todo/domain/usecases/get_task.dart';
+import 'package:todo_sprint/features/todo/domain/usecases/get_todo.dart';
 
 import 'todo_repository.mocks.dart';
 
 void main() {
   late MockTodoRepository mockTodoRepository;
-  late GetTask usecase;
+  late GetTodo usecase;
 
   setUp(() {
     mockTodoRepository = MockTodoRepository();
 
-    usecase = GetTask(mockTodoRepository);
+    usecase = GetTodo(mockTodoRepository);
   });
 
   const String testId = '1';
@@ -26,9 +26,9 @@ void main() {
     dateUpdated: 'test dateUpdated',
   );
 
-  test('should get a single task', () async {
+  test('should get a single todo', () async {
     //Arrange
-    when(mockTodoRepository.getTaskById(testId)).thenAnswer(
+    when(mockTodoRepository.getTodoById(testId)).thenAnswer(
       (_) async => const Right(testTodo),
     );
 
@@ -37,7 +37,7 @@ void main() {
 
     //Assert
     expect(result, const Right(testTodo));
-    verify(mockTodoRepository.getTaskById(testId));
+    verify(mockTodoRepository.getTodoById(testId));
     verifyNoMoreInteractions(mockTodoRepository);
   });
 }

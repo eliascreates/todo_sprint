@@ -2,16 +2,16 @@ import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
-import 'package:todo_sprint/features/todo/domain/usecases/update_task.dart';
+import 'package:todo_sprint/features/todo/domain/usecases/update_todo.dart';
 import 'todo_repository.mocks.dart';
 
 void main() {
   late MockTodoRepository mockTodoRepository;
-  late UpdateTask usecase;
+  late UpdateTodo usecase;
 
   setUp(() {
     mockTodoRepository = MockTodoRepository();
-    usecase = UpdateTask(mockTodoRepository);
+    usecase = UpdateTodo(mockTodoRepository);
   });
 
   const testOriginalTodo = Todo(
@@ -29,9 +29,9 @@ void main() {
     dateUpdated: 'test dateUpdated',
   );
 
-  test(' should update Todo when a property is updated', () async {
+  test(' should update a todo', () async {
     //Arrange
-    when(mockTodoRepository.updateTask(testOriginalTodo)).thenAnswer(
+    when(mockTodoRepository.updateTodo(testOriginalTodo)).thenAnswer(
       (_) async => const Right(testUpdatedTodo),
     );
 
@@ -40,7 +40,7 @@ void main() {
 
     //Assert
     expect(result, const Right(testUpdatedTodo));
-    verify(mockTodoRepository.updateTask(testOriginalTodo));
+    verify(mockTodoRepository.updateTodo(testOriginalTodo));
     verifyNoMoreInteractions(mockTodoRepository);
   });
 }
