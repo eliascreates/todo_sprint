@@ -74,51 +74,51 @@ class MockTodoRepository extends _i1.Mock implements _i3.TodoRepository {
         )),
       ) as _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>>);
   @override
-  _i4.Future<_i2.Either<_i5.Failure, void>> createTask(_i6.Todo? todo) =>
+  _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>> createTask(_i6.Todo? todo) =>
       (super.noSuchMethod(
         Invocation.method(
           #createTask,
           [todo],
         ),
-        returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
-            _FakeEither_0<_i5.Failure, void>(
+        returnValue: _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>>.value(
+            _FakeEither_0<_i5.Failure, _i6.Todo>(
           this,
           Invocation.method(
             #createTask,
             [todo],
           ),
         )),
-      ) as _i4.Future<_i2.Either<_i5.Failure, void>>);
+      ) as _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>>);
   @override
-  _i4.Future<_i2.Either<_i5.Failure, void>> updateTask(_i6.Todo? todo) =>
+  _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>> updateTask(_i6.Todo? todo) =>
       (super.noSuchMethod(
         Invocation.method(
           #updateTask,
           [todo],
         ),
-        returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
-            _FakeEither_0<_i5.Failure, void>(
+        returnValue: _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>>.value(
+            _FakeEither_0<_i5.Failure, _i6.Todo>(
           this,
           Invocation.method(
             #updateTask,
             [todo],
           ),
         )),
-      ) as _i4.Future<_i2.Either<_i5.Failure, void>>);
+      ) as _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>>);
   @override
-  _i4.Future<_i2.Either<_i5.Failure, void>> deleteTask(String? todoId) =>
+  _i4.Future<_i2.Either<_i5.Failure, String>> deleteTask(String? todoId) =>
       (super.noSuchMethod(
         Invocation.method(
           #deleteTask,
           [todoId],
         ),
-        returnValue: _i4.Future<_i2.Either<_i5.Failure, void>>.value(
-            _FakeEither_0<_i5.Failure, void>(
+        returnValue: _i4.Future<_i2.Either<_i5.Failure, String>>.value(
+            _FakeEither_0<_i5.Failure, String>(
           this,
           Invocation.method(
             #deleteTask,
             [todoId],
           ),
         )),
-      ) as _i4.Future<_i2.Either<_i5.Failure, void>>);
+      ) as _i4.Future<_i2.Either<_i5.Failure, String>>);
 }

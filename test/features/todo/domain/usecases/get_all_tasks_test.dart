@@ -4,9 +4,9 @@ import 'package:mockito/annotations.dart';
 import 'package:todo_sprint/core/usecases/usecase.dart';
 import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
 import 'package:todo_sprint/features/todo/domain/repositories/todo_repository.dart';
-import 'package:todo_sprint/features/todo/domain/usecases/get_tasks.dart';
+import 'package:todo_sprint/features/todo/domain/usecases/get_all_tasks.dart';
 import 'package:mockito/mockito.dart';
-import 'get_tasks_test.mocks.dart';
+import 'todo_repository.mocks.dart';
 
 @GenerateMocks([TodoRepository])
 void main() {

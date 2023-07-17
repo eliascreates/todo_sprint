@@ -6,12 +6,12 @@ import 'package:todo_sprint/features/todo/domain/repositories/todo_repository.da
 import '../entities/todo.dart';
 
 class GetTasks extends Usecase<List<Todo>, NoParams> {
-  final TodoRepository todoRepository;
+  final TodoRepository repository;
 
-  GetTasks(this.todoRepository);
+  const GetTasks(this.repository);
 
   @override
   Future<Either<Failure, List<Todo>>> call(NoParams params) async {
-    return await todoRepository.getAllTasks();
+    return await repository.getAllTasks();
   }
 }

@@ -10,11 +10,11 @@ abstract class TodoRepository {
   Future<Either<Failure, Todo>> getTaskById(String todoId);
 
   //CREATE ONE TASK BY ID
-  Future<Either<Failure, void>> createTask(Todo todo);
+  Future<Either<Failure, Todo>> createTask(Todo todo);
 
   //UPDATE A TASK
-  Future<Either<Failure, void>> updateTask(Todo todo);
+  Future<Either<Failure, Todo>> updateTask(Todo todo);
 
   //DELETE A TASK
-  Future<Either<Failure, void>> deleteTask(String todoId);
+  Future<Either<Failure, String>> deleteTask(String todoId);
 }

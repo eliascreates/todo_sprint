@@ -8,18 +8,19 @@ import 'package:todo_sprint/features/todo/domain/repositories/todo_repository.da
 
 import '../entities/todo.dart';
 
-class CreateTask extends Usecase<Todo, Params> {
+class UpdateTask extends Usecase<Todo, Params> {
   final TodoRepository repository;
-  const CreateTask(this.repository);
+  const UpdateTask(this.repository);
 
   @override
   Future<Either<Failure, Todo>> call(Params params) async {
-    return await repository.createTask(params.todo);
+    return await repository.updateTask(params.todo);
   }
 }
 
 class Params extends Equatable {
   final Todo todo;
+
   const Params({required this.todo});
 
   @override
