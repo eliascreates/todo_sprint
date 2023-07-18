@@ -6,7 +6,8 @@ import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
 import 'package:todo_sprint/features/todo/domain/repositories/todo_repository.dart';
 import 'package:todo_sprint/features/todo/domain/usecases/get_all_todo.dart';
 import 'package:mockito/mockito.dart';
-import 'todo_repository.mocks.dart';
+import 'get_all_todo_test.mocks.dart';
+
 
 @GenerateMocks([TodoRepository])
 void main() {

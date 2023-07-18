@@ -4,7 +4,8 @@ import 'package:mockito/mockito.dart';
 import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
 import 'package:todo_sprint/features/todo/domain/usecases/get_todo.dart';
 
-import 'todo_repository.mocks.dart';
+import 'get_all_todo_test.mocks.dart';
+
 
 void main() {
   late MockTodoRepository mockTodoRepository;

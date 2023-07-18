@@ -24,19 +24,19 @@ abstract class TodoLocalDataSource {
   /// [TodoModel] represents the todo to be created.
   ///
   /// Throws a [CacheException] if the operation fails.
-  Future<void> createTodo(TodoModel todo);
+  Future<TodoModel> createTodo(TodoModel todo);
   
   /// Updates an existing todo and persists the changes to the local data source.
   ///
   /// [TodoModel] represents the todo with updated details.
   ///
   /// Throws a [CacheException] if the operation fails.
-  Future<void> updateTodo(TodoModel todo);
+  Future<TodoModel> updateTodo(TodoModel todo);
   
   /// Deletes a specific todo from the local data source.
   ///
   /// [todoId] represents the unique ID of the todo to delete.
   ///
   /// Throws a [CacheException] if the operation fails.
-  Future<void> deleteTodo(String todoId);
+  Future<String> deleteTodo(String todoId);
 }

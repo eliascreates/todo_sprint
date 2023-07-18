@@ -42,6 +42,12 @@ class DatabaseFailure extends Failure {
   @override
   String get message => "Database failure occured";
 }
+class UnexpectedFailure extends Failure {
+  const UnexpectedFailure();
+
+  @override
+  String get message => "Unexpected failure occured";
+}
 
 class ValidationFailure extends Failure {
   final String errorMessage;

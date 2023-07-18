@@ -21,59 +21,109 @@ class TodoRepositoryImpl implements TodoRepository {
 
   @override
   Future<Either<Failure, Todo>> createTodo(Todo todo) async {
-    // TODO: createTodo - Account for Internet Access (Offline/Online)
-
     try {
-      final createdTodo = await remoteDataSource.createTodo(todo as TodoModel);
-      return Right(createdTodo);
-    } on ServerException {
-      return const Left(ServerFailure());
+      final hasInternet = await networkInfo.isConnected;
+
+      if (hasInternet) {
+        final createdTodo =
+            await remoteDataSource.createTodo(todo as TodoModel);
+        await localDataSource.createTodo(todo);
+        return Right(createdTodo);
+      } else {
+        final createdTodo = await localDataSource.createTodo(todo as TodoModel);
+
+        return Right(createdTodo);
+      }
+    } catch (e) {
+      return Left(_mapExceptionToFailure(e));
     }
   }
 
   @override
   Future<Either<Failure, List<Todo>>> getAllTodos() async {
-    // TODO: getAllTodos - Account for Internet Access (Offline/Online)
     try {
-      final todos = await remoteDataSource.getAllTodos();
-      return Right(todos);
-    } on ServerException {
-      return const Left(ServerFailure());
+      final hasInternet = await networkInfo.isConnected;
+
+      if (hasInternet) {
+        final todos = await remoteDataSource.getAllTodos();
+
+        return Right(todos);
+      } else {
+        final todos = await localDataSource.getAllTodos();
+        return Right(todos);
+      }
+    } catch (e) {
+      return Left(_mapExceptionToFailure(e));
     }
   }
 
   @override
   Future<Either<Failure, Todo>> getTodoById(String todoId) async {
-    // TODO: getTodoById - Account for Internet Access (Offline/Online)
-
     try {
-      final fetchedTodo = await remoteDataSource.getTodoById(todoId);
-      return Right(fetchedTodo);
-    } on ServerException {
-      return const Left(ServerFailure());
+      final hasInternet = await networkInfo.isConnected;
+
+      if (hasInternet) {
+        final fetchedTodo = await remoteDataSource.getTodoById(todoId);
+        return Right(fetchedTodo);
+      } else {
+        final fetchedTodo = await localDataSource.getTodoById(todoId);
+        return Right(fetchedTodo);
+      }
+    } catch (e) {
+      return Left(_mapExceptionToFailure(e));
     }
   }
 
   @override
   Future<Either<Failure, Todo>> updateTodo(Todo todo) async {
-    // TODO: updateTodo - Account for Internet Access (Offline/Online)
     try {
-      final updatedTodo = await remoteDataSource.updateTodo(todo as TodoModel);
-      return Right(updatedTodo);
-    } on ServerException {
-      return const Left(ServerFailure());
+      final hasInternet = await networkInfo.isConnected;
+
+      if (hasInternet) {
+        final updatedTodo =
+            await remoteDataSource.updateTodo(todo as TodoModel);
+        await localDataSource.updateTodo(todo);
+        return Right(updatedTodo);
+      } else {
+        final updatedTodo = await localDataSource.updateTodo(todo as TodoModel);
+        return Right(updatedTodo);
+      }
+    } catch (e) {
+      return Left(_mapExceptionToFailure(e));
     }
   }
 
   @override
   Future<Either<Failure, String>> deleteTodo(String todoId) async {
-    // TODO: deleteTodo - Account for Internet Access (Offline/Online)
-
     try {
-      final deleteResponseString = await remoteDataSource.deleteTodo(todoId);
-      return Right(deleteResponseString);
-    } on ServerException {
-      return const Left(ServerFailure());
+      final hasInternet = await networkInfo.isConnected;
+
+      if (hasInternet) {
+        final deleteResponseString = await remoteDataSource.deleteTodo(todoId);
+        await localDataSource.deleteTodo(todoId);
+        return Right(deleteResponseString);
+      } else {
+        final deleteResponseString = await localDataSource.deleteTodo(todoId);
+        return Right(deleteResponseString);
+      }
+    } catch (e) {
+      return Left(_mapExceptionToFailure(e));
     }
+  }
+
+  Failure _mapExceptionToFailure(dynamic exception) {
+    if (exception is ServerException) {
+      return const ServerFailure();
+    } else if (exception is CacheException) {
+      return const CacheFailure();
+    } else if (exception is NotFoundException) {
+      return const NotFoundFailure();
+    } else if (exception is NetworkException) {
+      return const NetworkFailure();
+    } else if (exception is DatabaseException) {
+      return const DatabaseFailure();
+    }
+
+    return const UnexpectedFailure();
   }
 }

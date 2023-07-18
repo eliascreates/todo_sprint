@@ -1,10 +1,10 @@
 class ServerException implements Exception {
   const ServerException();
 }
+
 class CacheException implements Exception {
   const CacheException();
 }
-
 
 class NotFoundException implements Exception {
   const NotFoundException();
@@ -19,5 +19,8 @@ class DatabaseException implements Exception {
 }
 
 class ValidationException implements Exception {
-  const ValidationException();
+  const ValidationException(String message);
+
+  @override
+  String toString() => 'Invalid Input';
 }
