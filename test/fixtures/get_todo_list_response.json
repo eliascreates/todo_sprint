@@ -1,0 +1,32 @@
+{
+    "code": 200,
+    "success": true,
+    "timestamp": 1689771406368,
+    "message": "Paginated Response",
+    "items": [
+      {
+        "_id": "1",
+        "title": "test title",
+        "description": "test description",
+        "is_completed": false,
+        "created_at": "2023-07-19T12:26:51.135Z",
+        "updated_at": "2023-07-19T12:26:51.135Z"
+      },
+      {
+        "_id": "2",
+        "title": "test title",
+        "description": "test description",
+        "is_completed": false,
+        "created_at": "2023-07-19T12:56:14.456Z",
+        "updated_at": "2023-07-19T12:56:14.456Z"
+      }
+    ],
+    "meta": {
+      "total_items": 2,
+      "total_pages": 1,
+      "per_page_item": 10,
+      "current_page": 1,
+      "page_size": 2,
+      "has_more_page": false
+    }
+}

@@ -5,27 +5,28 @@ class TodoModel extends Todo {
     required super.id,
     required super.title,
     required super.description,
+    super.isCompleted,
     required super.dateCreated,
     required super.dateUpdated,
   });
 
   factory TodoModel.fromJson(Map<String, dynamic> map) {
     return TodoModel(
-      id: map['id'],
+      id: map['_id'],
       title: map['title'],
       description: map['description'],
-      dateCreated: map['dateCreated'],
-      dateUpdated: map['dateUpdated'],
+      isCompleted: map['is_completed'],
+      dateCreated: map['created_at'],
+      dateUpdated: map['updated_at'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
+      '_id': id,
       'title': title,
       'description': description,
-      'dateCreated': dateCreated,
-      'dateUpdated': dateUpdated,
+      'is_completed': isCompleted,
     };
   }
 }
