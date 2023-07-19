@@ -1,20 +1,21 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
-import 'package:todo_sprint/features/todo/domain/usecases/create_task.dart';
+import 'package:todo_sprint/features/todo/domain/usecases/create_todo.dart';
 import 'package:mockito/mockito.dart';
-import 'todo_repository.mocks.dart';
+import 'get_all_todo_test.mocks.dart';
+
 
 
 // @GenerateMocks([TodoRepository])
 void main() {
   late MockTodoRepository mockTodoRepository;
-  late CreateTask usecase;
+  late CreateTodo usecase;
 
   setUp(() {
     mockTodoRepository = MockTodoRepository();
 
-    usecase = CreateTask(mockTodoRepository);
+    usecase = CreateTodo(mockTodoRepository);
   });
 
   const testTodo = Todo(
@@ -23,9 +24,9 @@ void main() {
       description: 'test description',
       dateCreated: 'test dateCreated',
       dateUpdated: 'test dateUpdated');
-  test('should create a new task', () async {
+  test('should create a new todo', () async {
     //Arrange
-    when(mockTodoRepository.createTask(testTodo))
+    when(mockTodoRepository.createTodo(testTodo))
         .thenAnswer((_) async => const Right(testTodo));
 
     //Act
@@ -33,7 +34,7 @@ void main() {
 
     //Assert
     expect(result, const Right(testTodo));
-    verify(mockTodoRepository.createTask(testTodo));
+    verify(mockTodoRepository.createTodo(testTodo));
     verifyNoMoreInteractions(mockTodoRepository);
   });
 }
