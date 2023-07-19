@@ -104,9 +104,16 @@ class TodoRemoteDataSourceImpl implements TodoRemoteDataSource {
   }
 
   @override
-  Future<TodoModel> getTodoById(String todoId) {
-    // TODO: implement getTodoById
-    throw UnimplementedError();
+  Future<TodoModel> getTodoById(String todoId) async {
+    final url = 'https://api.nstack.in/v1/todos/$todoId';
+
+    final response = await client.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      return TodoModel.fromJson(jsonDecode(response.body)['data']);
+    }
+
+    throw const ServerException();
   }
 
   @override

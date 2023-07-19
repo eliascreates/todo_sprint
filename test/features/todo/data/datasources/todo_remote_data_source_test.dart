@@ -152,7 +152,54 @@ void main() {
     });
   });
 
-  group('getTodoById ', () {});
+  group('getTodoById ', () {
+    const testTodo = TodoModel(
+      id: '1',
+      title: 'test title',
+      description: 'test description',
+      dateCreated: '2023-07-19T12:26:51.135Z',
+      dateUpdated: '2023-07-19T12:26:51.135Z',
+    );
+    final url = 'https://api.nstack.in/v1/todos/${testTodo.id}';
+
+    test('should perform a GET request to get a specific of todo', () async {
+      //Arrange
+      when(mockHttpClient.get(Uri.parse(url))).thenAnswer(
+          (_) async => http.Response(fixture('get_todo_response.json'), 200));
+
+      //Act
+      await dataSource.getTodoById(testTodo.id);
+
+      //Assert
+      verify(mockHttpClient.get(Uri.parse(url)));
+    });
+
+    test('should return a valid [TodoModel] when status code is 200 (success)',
+        () async {
+      //Arrange
+      when(mockHttpClient.get(Uri.parse(url))).thenAnswer(
+          (_) async => http.Response(fixture('get_todo_response.json'), 200));
+
+      //Act
+      final result = await dataSource.getTodoById(testTodo.id);
+
+      //Assert
+      expect(result, testTodo);
+    });
+    test('should throw a ServerException when status code is 400 (failure)',
+        () {
+      //Arrange
+      when(mockHttpClient.get(Uri.parse(url))).thenAnswer(
+          (_) async => http.Response(fixture('get_todo_response.json'), 400));
+
+      //Act
+      final call = dataSource.getTodoById;
+
+      //Assert
+      expect(() => call(testTodo.id),
+          throwsA(const TypeMatcher<ServerException>()));
+    });
+  });
   group('deleteTodo', () {
     const testId = '1';
 
