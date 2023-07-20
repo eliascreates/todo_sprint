@@ -10,6 +10,23 @@ class TodoModel extends Todo {
     required super.dateUpdated,
   });
 
+  TodoModel copyWith({
+    String? id,
+    String? title,
+    String? description,
+    bool? isCompleted,
+    String? dateCreated,
+    String? dateUpdated,
+  }) {
+    return TodoModel(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      dateCreated: dateCreated ?? this.dateCreated,
+      dateUpdated: dateUpdated ?? this.dateCreated,
+    );
+  }
+
   factory TodoModel.fromJson(Map<String, dynamic> map) {
     return TodoModel(
       id: map['_id'],
