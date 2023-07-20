@@ -6,7 +6,7 @@ part 'todo_event.dart';
 part 'todo_state.dart';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
-  TodoBloc() : super(TodoInitial()) {
+  TodoBloc() : super(const TodoState()) {
     on<TodoEvent>((event, emit) {
     });
   }
