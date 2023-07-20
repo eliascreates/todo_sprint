@@ -49,11 +49,6 @@ class TodoClearCompleted extends TodoEvent {
   const TodoClearCompleted();
 }
 
-
-class TodoSubmitted extends TodoEvent {
-  const TodoSubmitted();
-}
-
 class TodoDeleted extends TodoEvent {
   const TodoDeleted({required this.todoId});
 
