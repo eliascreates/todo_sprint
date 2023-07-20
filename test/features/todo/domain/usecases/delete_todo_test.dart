@@ -1,24 +1,24 @@
 import 'package:dartz/dartz.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
-import 'package:todo_sprint/features/todo/domain/usecases/delete_task.dart';
+import 'package:todo_sprint/features/todo/domain/usecases/delete_todo.dart';
 
-import 'todo_repository.mocks.dart';
+import 'get_all_todo_test.mocks.dart';
 
 void main() {
   late MockTodoRepository mockTodoRepository;
-  late DeleteTask usecase;
+  late DeleteTodo usecase;
 
   setUp(() {
     mockTodoRepository = MockTodoRepository();
-    usecase = DeleteTask(mockTodoRepository);
+    usecase = DeleteTodo(mockTodoRepository);
   });
 
   String testId = '1';
 
-  test(' should delete task', () async {
+  test(' should delete a todo', () async {
     //Arrange
-    when(mockTodoRepository.deleteTask(testId)).thenAnswer(
+    when(mockTodoRepository.deleteTodo(testId)).thenAnswer(
       (_) async => const Right('successfully deleted'),
     );
     //Act
@@ -26,7 +26,7 @@ void main() {
 
     //Assert
     expect(result, const Right('successfully deleted'));
-    verify(mockTodoRepository.deleteTask(testId));
+    verify(mockTodoRepository.deleteTodo(testId));
     verifyNoMoreInteractions(mockTodoRepository);
   });
 }

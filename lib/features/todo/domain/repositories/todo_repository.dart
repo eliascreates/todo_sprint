@@ -3,18 +3,18 @@ import 'package:todo_sprint/core/error/failures.dart';
 import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
 
 abstract class TodoRepository {
-  //GET ALL TASKS
-  Future<Either<Failure, List<Todo>>> getAllTasks();
+  //GET ALL TODOS
+  Future<Either<Failure, List<Todo>>> getAllTodos();
 
-  //GET ONE TASK BY ID
-  Future<Either<Failure, Todo>> getTaskById(String todoId);
+  //GET ONE Todo BY ID
+  Future<Either<Failure, Todo>> getTodoById(String todoId);
 
-  //CREATE ONE TASK BY ID
-  Future<Either<Failure, Todo>> createTask(Todo todo);
+  //CREATE ONE Todo BY ID
+  Future<Either<Failure, Todo>> createTodo(Todo todo);
 
-  //UPDATE A TASK
-  Future<Either<Failure, Todo>> updateTask(Todo todo);
+  //UPDATE A Todo
+  Future<Either<Failure, Todo>> updateTodo(Todo todo);
 
-  //DELETE A TASK
-  Future<Either<Failure, String>> deleteTask(String todoId);
+  //DELETE A Todo
+  Future<Either<Failure, String>> deleteTodo(String todoId);
 }
