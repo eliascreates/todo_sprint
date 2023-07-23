@@ -1,5 +1,6 @@
 import 'package:get_it/get_it.dart';
-import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+
 import 'package:http/http.dart' as http;
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 
@@ -49,8 +50,12 @@ Future<void> init() async {
 
   // ? EXTERNAL
 
+  //Hive Setup - Data Persistence
+  await Hive.initFlutter();
+  await Hive.openBox('settings');
+
   sl.registerLazySingleton<HiveInterface>(() => Hive);
-  
+
   sl.registerLazySingleton(() => http.Client());
   sl.registerLazySingleton(() => InternetConnectionChecker());
 }

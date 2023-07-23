@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../widgets/widgets.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -15,8 +16,11 @@ class SettingsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Todo Settings")),
-      body: const Center(child: Text("Settings")),
+      appBar: AppBar(title: const Text('Todo Settings')),
+      body: const Center(
+        child: ThemeSwitch(),
+      ),
+
     );
   }
 }
