@@ -14,6 +14,7 @@ import 'package:todo_sprint/features/todo/domain/usecases/get_todo.dart'
 import 'package:todo_sprint/features/todo/domain/usecases/update_todo.dart'
     as update;
 
+
 part 'todo_event.dart';
 part 'todo_state.dart';
 
@@ -29,6 +30,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   final update.UpdateTodo updateTodo;
   final delete.DeleteTodo deleteTodo;
 
+
   TodoBloc({
     required this.createTodo,
     required this.getAllTodos,
@@ -43,6 +45,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     on<TodoDeleted>(_onTodoDeleted);
 
     on<TodoToggleCompleted>(_onTodoToggleCompleted);
+
     on<TodoClearCompleted>(_onTodoClearCompleted);
   }
 
@@ -68,6 +71,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         },
       ),
     );
+
   }
 
   Future<void> _onTodoByIdFetched(
@@ -89,6 +93,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         ),
       ),
     );
+
   }
 
   Future<void> _onTodoFetchedAll(
@@ -110,6 +115,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         ),
       ),
     );
+
   }
 
   Future<void> _onTodoUpdated(
@@ -135,6 +141,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         },
       ),
     );
+
   }
 
   Future<void> _onTodoDeleted(
@@ -181,6 +188,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         },
       ),
     );
+
   }
 
   Future<void> _onTodoClearCompleted(
@@ -208,5 +216,6 @@ extension _MapFailureToMessage on Failure {
       default:
         return "Unexpected Error";
     }
+
   }
 }

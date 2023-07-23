@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-
 import '../widgets/widgets.dart';
 
 class SettingsPage extends StatelessWidget {
@@ -21,6 +20,7 @@ class SettingsView extends StatelessWidget {
       body: const Center(
         child: ThemeSwitch(),
       ),
+
     );
   }
 }
