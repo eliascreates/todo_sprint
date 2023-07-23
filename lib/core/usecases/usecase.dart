@@ -5,11 +5,12 @@ import '../error/failures.dart';
 
 abstract class Usecase<Type, Params> {
   const Usecase();
-  
+
   Future<Either<Failure, Type>> call(Params params);
 }
 
 class NoParams extends Equatable {
+  const NoParams();
   @override
   List<Object?> get props => [];
 }

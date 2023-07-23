@@ -8,7 +8,6 @@ import 'package:todo_sprint/features/todo/domain/usecases/get_all_todo.dart';
 import 'package:mockito/mockito.dart';
 import 'get_all_todo_test.mocks.dart';
 
-
 @GenerateMocks([TodoRepository])
 void main() {
   late MockTodoRepository mockTodoRepository;
@@ -21,11 +20,12 @@ void main() {
 
   const List<Todo> testList = [
     Todo(
-        id: '1',
-        title: 'test title',
-        description: 'test description',
-        dateCreated: 'test dateCreated',
-        dateUpdated: 'test dateUpdated'),
+      id: '1',
+      title: 'test title',
+      description: 'test description',
+      dateCreated: 'test dateCreated',
+      dateUpdated: 'test dateUpdated',
+    ),
     Todo(
       id: '2',
       title: 'test title',
@@ -59,7 +59,7 @@ void main() {
     );
     //Act
 
-    final result = await usecase(NoParams());
+    final result = await usecase(const NoParams());
 
     //Assert
     expect(result, const Right(testList));

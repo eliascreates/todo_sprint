@@ -37,12 +37,13 @@ class TodoUpdated extends TodoEvent {
   List<Object> get props => [todo];
 }
 
-class TodoMarkAsCompleted extends TodoEvent {
-  const TodoMarkAsCompleted();
-}
+class TodoToggleCompleted extends TodoEvent {
+  const TodoToggleCompleted({required this.todo});
 
-class TodoMarkAsIncomplete extends TodoEvent {
-  const TodoMarkAsIncomplete();
+  final Todo todo;
+
+  @override
+  List<Object> get props => [todo];
 }
 
 class TodoClearCompleted extends TodoEvent {

@@ -52,9 +52,18 @@ class TodoView extends StatelessWidget {
                       dateUpdated: "2023-07-19T12:26:51.135Z",
                     ),
                     onToggleComplete: (isCompleted) {
-                      context.read<TodoBloc>().add(isCompleted
-                          ? const TodoMarkAsCompleted()
-                          : const TodoMarkAsIncomplete());
+                      context.read<TodoBloc>().add(
+                            TodoToggleCompleted(
+                              todo: Todo(
+                                id: '123',
+                                title: '${i + 1} - Study SOLID Principles',
+                                description:
+                                    'Consistency is key when it comes to naming files and folders. Establish naming conventions and patterns within your project or team and stick to them consistently. This consistency will make it easier for team members to understand and navigate the codebase.',
+                                dateCreated: "2023-07-19T12:26:51.135Z",
+                                dateUpdated: "2023-07-19T12:26:51.135Z",
+                              ),
+                            ),
+                          );
                     },
                     onDismiss: (direction) {
                       // context
@@ -91,9 +100,9 @@ class TodoView extends StatelessWidget {
                   TodoListTile(
                     todo: todo,
                     onToggleComplete: (isCompleted) {
-                      context.read<TodoBloc>().add(isCompleted
-                          ? const TodoMarkAsCompleted()
-                          : const TodoMarkAsIncomplete());
+                      context
+                          .read<TodoBloc>()
+                          .add(TodoToggleCompleted(todo: todo));
                     },
                     onDismiss: (direction) {
                       context

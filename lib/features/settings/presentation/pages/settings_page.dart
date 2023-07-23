@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:hive_flutter/hive_flutter.dart';
+
+import '../widgets/widgets.dart';
 
 class SettingsPage extends StatelessWidget {
   const SettingsPage({super.key});
@@ -17,17 +18,8 @@ class SettingsView extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Todo Settings')),
-      body: Center(
-        child: ValueListenableBuilder(
-          valueListenable: Hive.box('settings').listenable(),
-          builder: (context, box, child) {
-            final isDark = box.get('isDark', defaultValue: false);
-            return Switch(
-              value: isDark,
-              onChanged: (value) => box.put('isDark', value),
-            );
-          },
-        ),
+      body: const Center(
+        child: ThemeSwitch(),
       ),
     );
   }
