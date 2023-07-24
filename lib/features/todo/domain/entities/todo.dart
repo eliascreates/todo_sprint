@@ -11,9 +11,22 @@ class Todo extends Equatable {
   final String dateUpdated;
 
   String formatDate(String date) {
+    DateTime now = DateTime.now();
     DateTime dateTime = DateTime.parse(date);
-    String formatted = DateFormat('MM/dd/yyyy h:mm a').format(dateTime);
-    return formatted; //* Output: 07/16/2023 6:42 PM
+
+    // Calculates the difference in days between now and the input date
+    int differenceInDays = now.difference(dateTime).inDays.abs();
+
+    if (differenceInDays == 0) {
+      return 'Today - ${DateFormat('h:mm a').format(dateTime)}';
+    } else if (differenceInDays == 1) {
+      return 'Yesterday - ${DateFormat('h:mm a').format(dateTime)}';
+    } else if (differenceInDays <= 7) {
+      return '$differenceInDays days ago';
+    } else {
+      // For dates older than a week, it will use the proper format
+      return DateFormat('MMM d, y, h:mm a').format(dateTime);
+    }
   }
 
   const Todo({

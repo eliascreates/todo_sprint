@@ -53,6 +53,7 @@ Future<void> init() async {
   //Hive Setup - Data Persistence
   await Hive.initFlutter();
   await Hive.openBox('settings');
+  await Hive.openBox('todo_box');
 
   sl.registerLazySingleton<HiveInterface>(() => Hive);
 

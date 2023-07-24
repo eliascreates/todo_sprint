@@ -1,8 +1,9 @@
 import 'package:flutter_test/flutter_test.dart';
+import 'package:intl/intl.dart';
 import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
 
 void main() {
-  group('formatData', () {
+  group('formatDate', () {
     late Todo todo;
 
     setUp(() {
@@ -14,13 +15,55 @@ void main() {
         dateUpdated: "2023-07-16T18:42:04.879Z",
       );
     });
+    test('should return "Today" for the current date', () {
+      //Arrange
+      DateTime now = DateTime.now();
 
-    test('Should return a well formatted date (MM/dd/yyyy h:mm a)', () {
       //Act
-      final result = todo.formatDate(todo.dateCreated);
+      String result = todo.formatDate(now.toIso8601String());
 
-      //Assert 7/16/2023 6:42 PM
-      expect(result, '07/16/2023 6:42 PM');
+      //Assert
+      String expectedString = 'Today - ${DateFormat('h:mm a').format(now)}';
+      expect(result, expectedString);
+    });
+
+    test('should return "Yesterday" for the date one day ago', () {
+      //Arrange
+      DateTime now = DateTime.now();
+
+      //Act
+      DateTime yesterday = now.subtract(const Duration(days: 1));
+      String result = todo.formatDate(yesterday.toIso8601String());
+
+      //Assert
+      String expectedString =
+          'Yesterday - ${DateFormat('h:mm a').format(yesterday)}';
+
+      expect(result, expectedString);
+    });
+
+    test('should return "X days ago" for dates within the last week', () {
+      //Arrange
+      DateTime now = DateTime.now();
+      
+      //Act
+      DateTime sixDaysAgo = now.subtract(const Duration(days: 6));
+      String result =
+          todo.formatDate(sixDaysAgo.toUtc().toIso8601String());
+      
+      //Assert
+      expect(result, '6 days ago');
+    });
+
+    test('should return the proper format for dates older than a week', () {
+      //Arrange
+      String dateString = "2023-07-01T18:42:04.879Z";
+      
+      //Act
+      String formattedDate = todo.formatDate(dateString);
+      
+      //Assert
+      expect(formattedDate, 'Jul 1, 2023, 6:42 PM');
     });
   });
 }

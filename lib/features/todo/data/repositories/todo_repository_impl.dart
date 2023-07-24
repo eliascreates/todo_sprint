@@ -22,18 +22,23 @@ class TodoRepositoryImpl implements TodoRepository {
   @override
   Future<Either<Failure, Todo>> createTodo(Todo todo) async {
     try {
-      final hasInternet = await networkInfo.isConnected;
+      // final hasInternet = await networkInfo.isConnected;
+      final todoModel = TodoModel(
+          id: todo.id,
+          title: todo.title,
+          description: todo.description,
+          dateCreated: todo.dateCreated,
+          dateUpdated: todo.dateUpdated);
 
-      if (hasInternet) {
-        final createdTodo =
-            await remoteDataSource.createTodo(todo as TodoModel);
-        await localDataSource.createTodo(todo);
+      // if (hasInternet) {
+        final createdTodo = await remoteDataSource.createTodo(todoModel);
+      //   await localDataSource.createTodo(todoModel);
         return Right(createdTodo);
-      } else {
-        final createdTodo = await localDataSource.createTodo(todo as TodoModel);
+      // } else {
+        // final createdTodo = await localDataSource.createTodo(todoModel);
 
-        return Right(createdTodo);
-      }
+        // return Right(createdTodo);
+      // }
     } catch (e) {
       return Left(_mapExceptionToFailure(e));
     }
@@ -42,16 +47,16 @@ class TodoRepositoryImpl implements TodoRepository {
   @override
   Future<Either<Failure, List<Todo>>> getAllTodos() async {
     try {
-      final hasInternet = await networkInfo.isConnected;
+      // final hasInternet = await networkInfo.isConnected;
 
-      if (hasInternet) {
+      // if (hasInternet) {
         final todos = await remoteDataSource.getAllTodos();
 
         return Right(todos);
-      } else {
-        final todos = await localDataSource.getAllTodos();
-        return Right(todos);
-      }
+      // } else {
+        // final todos = await localDataSource.getAllTodos();
+        // return Right(todos);
+      // }
     } catch (e) {
       return Left(_mapExceptionToFailure(e));
     }
@@ -60,15 +65,15 @@ class TodoRepositoryImpl implements TodoRepository {
   @override
   Future<Either<Failure, Todo>> getTodoById(String todoId) async {
     try {
-      final hasInternet = await networkInfo.isConnected;
+      // final hasInternet = await networkInfo.isConnected;
 
-      if (hasInternet) {
+      // if (hasInternet) {
         final fetchedTodo = await remoteDataSource.getTodoById(todoId);
         return Right(fetchedTodo);
-      } else {
-        final fetchedTodo = await localDataSource.getTodoById(todoId);
-        return Right(fetchedTodo);
-      }
+      // } else {
+        // final fetchedTodo = await localDataSource.getTodoById(todoId);
+        // return Right(fetchedTodo);
+      // }
     } catch (e) {
       return Left(_mapExceptionToFailure(e));
     }
@@ -77,17 +82,21 @@ class TodoRepositoryImpl implements TodoRepository {
   @override
   Future<Either<Failure, Todo>> updateTodo(Todo todo) async {
     try {
-      final hasInternet = await networkInfo.isConnected;
-
-      if (hasInternet) {
-        final updatedTodo =
-            await remoteDataSource.updateTodo(todo as TodoModel);
-        await localDataSource.updateTodo(todo);
+      // final hasInternet = await networkInfo.isConnected;
+      final todoModel = TodoModel(
+          id: todo.id,
+          title: todo.title,
+          description: todo.description,
+          dateCreated: todo.dateCreated,
+          dateUpdated: todo.dateUpdated);
+      // if (hasInternet) {
+        final updatedTodo = await remoteDataSource.updateTodo(todoModel);
+      //   await localDataSource.updateTodo(todoModel);
         return Right(updatedTodo);
-      } else {
-        final updatedTodo = await localDataSource.updateTodo(todo as TodoModel);
-        return Right(updatedTodo);
-      }
+      // } else {
+        // final updatedTodo = await localDataSource.updateTodo(todoModel);
+        // return Right(updatedTodo);
+      // }
     } catch (e) {
       return Left(_mapExceptionToFailure(e));
     }
@@ -96,16 +105,16 @@ class TodoRepositoryImpl implements TodoRepository {
   @override
   Future<Either<Failure, String>> deleteTodo(String todoId) async {
     try {
-      final hasInternet = await networkInfo.isConnected;
+      // final hasInternet = await networkInfo.isConnected;
 
-      if (hasInternet) {
+      // if (hasInternet) {
         final deleteResponseString = await remoteDataSource.deleteTodo(todoId);
-        await localDataSource.deleteTodo(todoId);
+      //   await localDataSource.deleteTodo(todoId);
         return Right(deleteResponseString);
-      } else {
-        final deleteResponseString = await localDataSource.deleteTodo(todoId);
-        return Right(deleteResponseString);
-      }
+      // } else {
+        // final deleteResponseString = await localDataSource.deleteTodo(todoId);
+        // return Right(deleteResponseString);
+      // }
     } catch (e) {
       return Left(_mapExceptionToFailure(e));
     }

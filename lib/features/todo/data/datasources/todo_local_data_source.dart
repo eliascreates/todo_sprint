@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:todo_sprint/core/error/exceptions.dart';
 import 'package:todo_sprint/features/todo/data/models/todo_model.dart';
@@ -58,7 +59,7 @@ class TodoLocalDataSourceImpl implements TodoLocalDataSource {
     try {
       final box = await hive.openBox<TodoModel>(_todoBoxName);
       await box.put(todo.id, todo);
-
+      debugPrint("CREATED: $todo");
       return todo;
     } catch (e) {
       throw const CacheException();
@@ -81,6 +82,7 @@ class TodoLocalDataSourceImpl implements TodoLocalDataSource {
   Future<List<TodoModel>> getAllTodos() async {
     try {
       final box = await hive.openBox<TodoModel>(_todoBoxName);
+      debugPrint(box.values.toList().toString());
       return box.values.toList();
     } catch (e) {
       throw const CacheException();

@@ -7,8 +7,6 @@ part 'settings_state.dart';
 
 class SettingsBloc extends Bloc<SettingsEvent, SettingsState> {
   SettingsBloc() : super(SettingsInitial()) {
-    on<SettingsEvent>((event, emit) {
-      // TODO: implement event handler
-    });
+    on<SettingsEvent>((event, emit) {});
   }
 }

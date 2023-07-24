@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:todo_sprint/features/home/presentation/pages/home_page.dart';
 // import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_sprint/features/settings/presentation/pages/settings_page.dart';
+import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
+import 'package:todo_sprint/features/todo/presentation/pages/todo_edit_page.dart';
 // import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
 
 class AppRoutes {
@@ -16,6 +18,15 @@ class AppRoutes {
       case home:
         return MaterialPageRoute(
           builder: (_) => const HomePage(),
+        );
+      case editPage:
+        if (settings.arguments is Todo) {
+          return MaterialPageRoute(
+            builder: (_) => TodoEditPage(todo: settings.arguments as Todo),
+          );
+        }
+        return MaterialPageRoute(
+          builder: (_) => const TodoEditPage(),
         );
       case settingsPage:
         return MaterialPageRoute(
