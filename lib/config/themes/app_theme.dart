@@ -11,8 +11,8 @@ class AppTheme {
           accentColor: const Color(0xFF993f62),
         ),
         snackBarTheme: const SnackBarThemeData(
-          behavior: SnackBarBehavior.floating,
-        ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: Color(0xffbf4e7a)),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       );
 

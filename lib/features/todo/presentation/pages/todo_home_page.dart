@@ -27,7 +27,20 @@ class TodoHomeView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(title: const Text(Strings.homeScreenTitle)),
-      body: BlocBuilder<TodoBloc, TodoState>(
+      body: BlocConsumer<TodoBloc, TodoState>(
+        listener: (context, state) {
+          if (state.status == TodoStatus.failure) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                SnackBar(
+                  backgroundColor: const Color(0xffc03851),
+                  duration: const Duration(seconds: 1),
+                  content: Text(state.errorMessage ?? 'Unexpected Error'),
+                ),
+              );
+          }
+        },
         builder: ((context, state) {
           if (state.todos.isEmpty) {
             if (state.status == TodoStatus.loading) {
@@ -83,8 +96,10 @@ class TodoHomeView extends StatelessWidget {
                           children: [
                             const Icon(Icons.delete),
                             const SizedBox(width: 20),
-                            Text('Delete',
-                                style: TextStyle(color: captionColor)),
+                            Text(
+                              'Delete',
+                              style: TextStyle(color: captionColor),
+                            ),
                           ],
                         ),
                       ),

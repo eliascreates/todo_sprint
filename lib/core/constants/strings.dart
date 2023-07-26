@@ -12,8 +12,11 @@ class Strings {
   static const homeScreenTitle = 'Todo Sprint';
   static const todoHomeAddTooltip = 'Add Todo';
 
-  // Visual State messages
+  //Snackbar messages
   static const todoHomeErrorSnackbarText = 'Something went wrong!';
+  static const todoHomeDeleteSnackbarText = 'deleted';
+
+  // Visual State messages
   static const todoHomeTodoDeletedSnackbarText = 'Todo Deleted!';
   static const todoHomeEmptyText = 'No Todos!';
 
