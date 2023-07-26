@@ -13,6 +13,10 @@ class TodoState extends Equatable {
   final TodoStatus status;
   final String? errorMessage;
 
+  @override
+  String toString() =>
+      'TodoState(todos: ${todos.length}, status: $status, errorMessage: $errorMessage)';
+
   TodoState copyWith({
     List<Todo>? todos,
     TodoStatus? status,
@@ -26,5 +30,5 @@ class TodoState extends Equatable {
   }
 
   @override
-  List<Object> get props => [todos, status];
+  List<Object?> get props => [todos, status, errorMessage];
 }

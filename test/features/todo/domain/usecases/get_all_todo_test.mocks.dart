@@ -74,34 +74,60 @@ class MockTodoRepository extends _i1.Mock implements _i3.TodoRepository {
         )),
       ) as _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>>);
   @override
-  _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>> createTodo(_i6.Todo? todo) =>
+  _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>> createTodo({
+    required String? title,
+    required String? description,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #createTodo,
-          [todo],
+          [],
+          {
+            #title: title,
+            #description: description,
+          },
         ),
         returnValue: _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>>.value(
             _FakeEither_0<_i5.Failure, _i6.Todo>(
           this,
           Invocation.method(
             #createTodo,
-            [todo],
+            [],
+            {
+              #title: title,
+              #description: description,
+            },
           ),
         )),
       ) as _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>>);
   @override
-  _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>> updateTodo(_i6.Todo? todo) =>
+  _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>> updateTodo(
+    String? todoId, {
+    String? title,
+    String? description,
+    bool? isComplete,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #updateTodo,
-          [todo],
+          [todoId],
+          {
+            #title: title,
+            #description: description,
+            #isComplete: isComplete,
+          },
         ),
         returnValue: _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>>.value(
             _FakeEither_0<_i5.Failure, _i6.Todo>(
           this,
           Invocation.method(
             #updateTodo,
-            [todo],
+            [todoId],
+            {
+              #title: title,
+              #description: description,
+              #isComplete: isComplete,
+            },
           ),
         )),
       ) as _i4.Future<_i2.Either<_i5.Failure, _i6.Todo>>);

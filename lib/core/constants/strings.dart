@@ -1,34 +1,46 @@
 class Strings {
   const Strings._();
 
+  //? App
   static const appTitle = 'Todo Sprint';
 
-  // HomeScreen
+  //? Tab Titles
+  static const tabHome = 'Home';
+  static const tabSettings = 'Settings';
+
+  //? Home Page
   static const homeScreenTitle = 'Todo Sprint';
+  static const todoHomeAddTooltip = 'Add Todo';
 
-  //Overview Todo things
-  static const todoSettingsAppbarTitle = 'Todo Settings';
+  // Visual State messages
+  static const todoHomeErrorSnackbarText = 'Something went wrong!';
+  static const todoHomeTodoDeletedSnackbarText = 'Todo Deleted!';
+  static const todoHomeEmptyText = 'No Todos!';
 
-  static const todosOverviewErrorSnackbarText = 'Something went wrong!';
-  static const todosOverviewTodoDeletedSnackbarText = 'Todo Deleted!';
-  static const todosOverviewEmptyText = 'No Todos!';
-
-  //ToolTips
-  static const todosOverviewOptionsTooltip = 'Options';
-  static const todosOverviewOptionsMarkAllIncomplete = 'None';
-  static const todosOverviewOptionsMarkAllComplete = 'All';
-  static const todosOverviewOptionsClearCompleted = 'Clear';
+  static const todoHomeOptionsTooltip = 'Options';
+  static const todoHomeOptionsMarkAllIncomplete = 'None';
+  static const todoHomeOptionsMarkAllComplete = 'All';
+  static const todoHomeOptionsClearCompleted = 'Clear';
 
   //Filter Popup menu
-  static const todosOverviewFilterTooltip = 'Filter';
-  static const todosOverviewFilterShowAll = 'All';
-  static const todosOverviewFilterActive = 'Active';
-  static const todosOverviewFilterShowCompleted = 'Completed';
+  static const todoHomeFilterTooltip = 'Filter';
+  static const todoHomeFilterShowAll = 'All';
+  static const todoHomeFilterActive = 'Active';
+  static const todoHomeFilterShowCompleted = 'Completed';
 
-  static const todoSaveButtonTooltip = 'Filter';
+  //? Settings Page
+  static const todoSettingsAppbarTitle = 'Todo Settings';
 
+  //? Edit Page
   static const todoAddAppBarTitle = 'New Todo';
   static const todoEditAppBarTitle = 'Edit Todo';
-  static const todoTitleLabel = 'Title';
-  static const todoDescriptionLabel = 'Description';
+
+
+  // Field Titles
+  static const todoEditTitleLabel = 'Title';
+  static const todoEditDescriptionLabel = 'Description';
+
+  //Save Button ToolTips
+  static const todoCreateButtonTooltip = 'Create Todo';
+  static const todoUpdateButtonTooltip = 'Update Todo';
 }

@@ -17,7 +17,6 @@ import 'package:todo_sprint/features/todo/domain/usecases/get_todo.dart'
 import 'package:todo_sprint/features/todo/domain/usecases/update_todo.dart'
     as update;
 import 'package:todo_sprint/features/todo/presentation/bloc/todo_bloc.dart';
-// import 'package:bloc_test/bloc_test.dart';
 import 'todo_bloc_test.mocks.dart';
 
 @GenerateMocks([
@@ -59,8 +58,10 @@ void main() {
     expect(bloc.state.status, equals(TodoStatus.initial));
   });
 
+  final cacheFailureMessage = const CacheFailure().message;
+
   group('TodoCreated', () {
-    const testTodo = Todo(
+    final testTodo = Todo(
       id: '1',
       title: 'test title',
       description: 'test description',
@@ -71,63 +72,52 @@ void main() {
     blocTest(
       'Should get data from the createTodo usecase ',
       build: () {
-        when(mockCreateTodo(const create.Params(todo: testTodo))).thenAnswer(
-          (_) async => const Right(testTodo),
+        when(mockCreateTodo(create.Params(
+                title: testTodo.title, description: testTodo.description)))
+            .thenAnswer(
+          (_) async => Right(testTodo),
         );
 
         return bloc;
       },
-      act: (bloc) => bloc.add(const TodoCreated(todo: testTodo)),
-      verify: (bloc) =>
-          verify(mockCreateTodo(const create.Params(todo: testTodo))),
+      act: (bloc) => bloc.add(TodoCreated(
+          title: testTodo.title, description: testTodo.description)),
+      verify: (bloc) => verify(mockCreateTodo(create.Params(
+          title: testTodo.title, description: testTodo.description))),
     );
     blocTest(
       'Should emit state status TodoStatus.[loading, success] when a new todo is created',
       build: () {
-        when(mockCreateTodo(const create.Params(todo: testTodo)))
-            .thenAnswer((_) async => const Right(testTodo));
+        when(mockCreateTodo(create.Params(
+                title: testTodo.title, description: testTodo.description)))
+            .thenAnswer((_) async => Right(testTodo));
         return bloc;
       },
-      act: (bloc) => bloc.add(const TodoCreated(todo: testTodo)),
+      act: (bloc) => bloc.add(TodoCreated(
+          title: testTodo.title, description: testTodo.description)),
       expect: () => [
         const TodoState(todos: [], status: TodoStatus.loading),
-        const TodoState(todos: [testTodo], status: TodoStatus.success),
+        TodoState(todos: [testTodo], status: TodoStatus.success),
       ],
-      verify: (bloc) =>
-          verify(mockCreateTodo(const create.Params(todo: testTodo))),
-    );
-    blocTest(
-      'Should emit state status TodoStatus.[loading, failure] when a ServerFailure is returned',
-      build: () {
-        when(mockGetAllTodos(const NoParams()))
-            .thenAnswer((_) async => const Left(ServerFailure()));
-
-        return bloc;
-      },
-      act: (bloc) => bloc.add(const TodoFetchedAll()),
-      expect: () => [
-        const TodoState(todos: [], status: TodoStatus.loading),
-        const TodoState(
-          todos: [],
-          status: TodoStatus.failure,
-          errorMessage: serverFailureMessage,
-        ),
-      ],
+      verify: (bloc) => verify(mockCreateTodo(create.Params(
+          title: testTodo.title, description: testTodo.description))),
     );
 
     blocTest(
       'Should emit state status TodoStatus.[loading, failure] when a CacheFailure is returned',
       build: () {
-        when(mockCreateTodo(const create.Params(todo: testTodo)))
+        when(mockCreateTodo(create.Params(
+                title: testTodo.title, description: testTodo.description)))
             .thenAnswer((_) async => const Left(CacheFailure()));
 
         return bloc;
       },
-      act: (bloc) => bloc.add(const TodoCreated(todo: testTodo)),
+      act: (bloc) => bloc.add(TodoCreated(
+          title: testTodo.title, description: testTodo.description)),
       expect: () => [
         const TodoState(todos: [], status: TodoStatus.loading),
-        const TodoState(
-          todos: [],
+        TodoState(
+          todos: const [],
           status: TodoStatus.failure,
           errorMessage: cacheFailureMessage,
         ),
@@ -136,7 +126,7 @@ void main() {
   });
 
   group('TodoFetchedAll', () {
-    const List<Todo> testList = [
+    List<Todo> testList = [
       Todo(
           id: '1',
           title: 'test title',
@@ -155,7 +145,7 @@ void main() {
       'Should get data from the getAllTodos usecase ',
       build: () {
         when(mockGetAllTodos(const NoParams())).thenAnswer(
-          (_) async => const Right(testList),
+          (_) async => Right(testList),
         );
 
         return bloc;
@@ -168,28 +158,15 @@ void main() {
       'Should emit state status TodoStatus.[loading, success] when all todos are fetched',
       build: () {
         when(mockGetAllTodos(const NoParams()))
-            .thenAnswer((_) async => const Right(testList));
+            .thenAnswer((_) async => Right(testList));
         return bloc;
       },
       act: (bloc) => bloc.add(const TodoFetchedAll()),
       expect: () => [
         const TodoState(todos: [], status: TodoStatus.loading),
-        const TodoState(todos: testList, status: TodoStatus.success),
+        TodoState(todos: testList, status: TodoStatus.success),
       ],
       verify: (bloc) => verify(mockGetAllTodos(const NoParams())),
-    );
-    blocTest(
-      'Should emit state status TodoStatus.[loading, failure] when a ServerFailure is returned',
-      build: () {
-        when(mockGetAllTodos(const NoParams()))
-            .thenAnswer((_) async => const Left(ServerFailure()));
-        return bloc;
-      },
-      act: (bloc) => bloc.add(const TodoFetchedAll()),
-      expect: () => [
-        const TodoState(todos: [], status: TodoStatus.loading),
-        const TodoState(todos: [], status: TodoStatus.failure),
-      ],
     );
 
     blocTest(
@@ -202,14 +179,18 @@ void main() {
       act: (bloc) => bloc.add(const TodoFetchedAll()),
       expect: () => [
         const TodoState(todos: [], status: TodoStatus.loading),
-        const TodoState(todos: [], status: TodoStatus.failure),
+        TodoState(
+          todos: const [],
+          status: TodoStatus.failure,
+          errorMessage: cacheFailureMessage,
+        ),
       ],
     );
   });
 
   group('TodoByIdFetched', () {
     const testId = '1';
-    const testTodo = Todo(
+    final testTodo = Todo(
       id: testId,
       title: 'test title',
       description: 'test description',
@@ -221,7 +202,7 @@ void main() {
       'Should get data from the getTodo usecase ',
       build: () {
         when(mockGetTodo(const get_todo.Params(todoId: testId))).thenAnswer(
-          (_) async => const Right(testTodo),
+          (_) async => Right(testTodo),
         );
 
         return bloc;
@@ -235,34 +216,16 @@ void main() {
       'Should emit state status TodoStatus.[loading, success] when a todo is fetched',
       build: () {
         when(mockGetTodo(const get_todo.Params(todoId: testId)))
-            .thenAnswer((_) async => const Right(testTodo));
+            .thenAnswer((_) async => Right(testTodo));
         return bloc;
       },
       act: (bloc) => bloc.add(const TodoByIdFetched(todoId: testId)),
       expect: () => [
         const TodoState(todos: [], status: TodoStatus.loading),
-        const TodoState(todos: [testTodo], status: TodoStatus.success),
+        TodoState(todos: [testTodo], status: TodoStatus.success),
       ],
       verify: (bloc) =>
           verify(mockGetTodo(const get_todo.Params(todoId: testId))),
-    );
-    blocTest(
-      'Should emit state status TodoStatus.[loading, failure] when a ServerFailure is returned',
-      build: () {
-        when(mockGetTodo(const get_todo.Params(todoId: testId)))
-            .thenAnswer((_) async => const Left(ServerFailure()));
-
-        return bloc;
-      },
-      act: (bloc) => bloc.add(const TodoByIdFetched(todoId: testId)),
-      expect: () => [
-        const TodoState(todos: [], status: TodoStatus.loading),
-        const TodoState(
-          todos: [],
-          status: TodoStatus.failure,
-          errorMessage: serverFailureMessage,
-        ),
-      ],
     );
 
     blocTest(
@@ -276,8 +239,8 @@ void main() {
       act: (bloc) => bloc.add(const TodoByIdFetched(todoId: testId)),
       expect: () => [
         const TodoState(todos: [], status: TodoStatus.loading),
-        const TodoState(
-          todos: [],
+        TodoState(
+          todos: const [],
           status: TodoStatus.failure,
           errorMessage: cacheFailureMessage,
         ),
@@ -285,85 +248,63 @@ void main() {
     );
   });
   group('TodoDeleted', () {
-    const testId = '1';
-    const testTodo = Todo(
-      id: testId,
-      title: 'test title',
-      description: 'test description',
-      dateCreated: 'test dateCreated',
-      dateUpdated: 'test dateUpdated',
+    const todoId = 'test_todo_id';
+    final existingTodo = Todo(
+      id: todoId,
+      title: 'Updated Todo',
+      description: 'Updated description',
+      dateCreated: DateTime.now().toIso8601String(),
+      dateUpdated: DateTime.now().toIso8601String(),
     );
 
-    const String response = "success";
+    const String response = 'success';
     blocTest(
       'Should get data from the deleteTodo usecase ',
       build: () {
-        when(mockDeleteTodo(const delete.Params(todoId: testId))).thenAnswer(
+        when(mockDeleteTodo(const delete.Params(todoId: todoId))).thenAnswer(
           (_) async => const Right(response),
         );
 
         return bloc;
       },
-      seed: () => const TodoState(todos: [testTodo]),
-      act: (bloc) => bloc.add(const TodoDeleted(todoId: testId)),
+      seed: () => TodoState(todos: [existingTodo]),
+      act: (bloc) => bloc.add(const TodoDeleted(todoId: todoId)),
       verify: (bloc) =>
-          verify(mockDeleteTodo(const delete.Params(todoId: testId))),
+          verify(mockDeleteTodo(const delete.Params(todoId: todoId))),
     );
 
     blocTest(
-      'Should emit state status TodoStatus.[loading, success] when a todo is deleted',
+      'Should emit state status TodoStatus.[success] when a todo is deleted',
       build: () {
-        when(mockDeleteTodo(const delete.Params(todoId: testId))).thenAnswer(
+        when(mockDeleteTodo(const delete.Params(todoId: todoId))).thenAnswer(
           (_) async => const Right(response),
         );
 
         return bloc;
       },
-      seed: () => const TodoState(todos: [testTodo]),
-      act: (bloc) => bloc.add(const TodoDeleted(todoId: testId)),
+      seed: () => TodoState(todos: [existingTodo]),
+      act: (bloc) => bloc.add(const TodoDeleted(todoId: todoId)),
       expect: () => [
-        const TodoState(todos: [testTodo], status: TodoStatus.loading),
         const TodoState(todos: [], status: TodoStatus.success),
       ],
       verify: (bloc) =>
-          verify(mockDeleteTodo(const delete.Params(todoId: testId))),
-    );
-    blocTest(
-      'Should emit state status TodoStatus.[loading, failure] when a ServerFailure is returned',
-      build: () {
-        when(mockDeleteTodo(const delete.Params(todoId: testId))).thenAnswer(
-          (_) async => const Left(ServerFailure()),
-        );
-
-        return bloc;
-      },
-      seed: () => const TodoState(todos: [testTodo]),
-      act: (bloc) => bloc.add(const TodoDeleted(todoId: testId)),
-      expect: () => [
-        const TodoState(todos: [testTodo], status: TodoStatus.loading),
-        const TodoState(
-          todos: [testTodo],
-          status: TodoStatus.failure,
-          errorMessage: serverFailureMessage,
-        ),
-      ],
+          verify(mockDeleteTodo(const delete.Params(todoId: todoId))),
     );
 
     blocTest(
-      'Should emit state status TodoStatus.[loading, failure] when a CacheFailure is returned',
+      'Should emit state status TodoStatus.[failure] when a CacheFailure is returned',
       build: () {
-        when(mockDeleteTodo(const delete.Params(todoId: testId))).thenAnswer(
+        when(mockDeleteTodo(const delete.Params(todoId: todoId))).thenAnswer(
           (_) async => const Left(CacheFailure()),
         );
 
         return bloc;
       },
-      seed: () => const TodoState(todos: [testTodo]),
-      act: (bloc) => bloc.add(const TodoDeleted(todoId: testId)),
+      seed: () => TodoState(todos: [existingTodo]),
+      act: (bloc) => bloc.add(const TodoDeleted(todoId: todoId)),
       expect: () => [
-        const TodoState(todos: [testTodo], status: TodoStatus.loading),
-        const TodoState(
-          todos: [testTodo],
+        TodoState(
+          todos: [existingTodo],
           status: TodoStatus.failure,
           errorMessage: cacheFailureMessage,
         ),
@@ -372,14 +313,14 @@ void main() {
   });
 
   group('TodoUpdated', () {
-    const testOriginalTodo = Todo(
+    final testOriginalTodo = Todo(
       id: '1',
       title: 'test original title',
       description: 'test description',
       dateCreated: 'test dateCreated',
       dateUpdated: 'test dateUpdated',
     );
-    const testUpdatedTodo = Todo(
+    final testUpdatedTodo = Todo(
       id: '1',
       title: 'test updated title',
       description: 'test description',
@@ -390,75 +331,80 @@ void main() {
     blocTest(
       'Should get data from the updateTodo usecase ',
       build: () {
-        when(mockUpdateTodo(const update.Params(todo: testOriginalTodo)))
-            .thenAnswer(
-          (_) async => const Right(testUpdatedTodo),
+        when(mockUpdateTodo(update.Params(
+          todoId: testOriginalTodo.id,
+          title: testUpdatedTodo.title,
+          description: testUpdatedTodo.description,
+        ))).thenAnswer(
+          (_) async => Right(testUpdatedTodo),
         );
 
         return bloc;
       },
-      act: (bloc) => bloc.add(const TodoUpdated(todo: testOriginalTodo)),
-      verify: (bloc) =>
-          verify(mockUpdateTodo(const update.Params(todo: testOriginalTodo))),
+      act: (bloc) => bloc.add(TodoUpdated(
+        todoId: testOriginalTodo.id,
+        title: testUpdatedTodo.title,
+        description: testUpdatedTodo.description,
+      )),
+      verify: (bloc) => verify(mockUpdateTodo(update.Params(
+        todoId: testOriginalTodo.id,
+        title: testUpdatedTodo.title,
+        description: testUpdatedTodo.description,
+      ))),
     );
 
     blocTest(
       'Should emit state status TodoStatus.[loading, success] when a todo is updated',
       build: () {
-        when(mockUpdateTodo(const update.Params(todo: testOriginalTodo)))
-            .thenAnswer(
-          (_) async => const Right(testUpdatedTodo),
+        when(mockUpdateTodo(update.Params(
+          todoId: testOriginalTodo.id,
+          title: testUpdatedTodo.title,
+          description: testUpdatedTodo.description,
+        ))).thenAnswer(
+          (_) async => Right(testUpdatedTodo),
         );
 
         return bloc;
       },
-      seed: () => const TodoState(todos: [testOriginalTodo]),
-      act: (bloc) => bloc.add(const TodoUpdated(todo: testOriginalTodo)),
+      seed: () => TodoState(todos: [testOriginalTodo]),
+      act: (bloc) => bloc.add(TodoUpdated(
+        todoId: testOriginalTodo.id,
+        title: testUpdatedTodo.title,
+        description: testUpdatedTodo.description,
+      )),
       expect: () => [
-        const TodoState(todos: [testOriginalTodo], status: TodoStatus.loading),
-        const TodoState(todos: [testUpdatedTodo], status: TodoStatus.success),
+        TodoState(todos: [testOriginalTodo], status: TodoStatus.loading),
+        TodoState(todos: [testUpdatedTodo], status: TodoStatus.success),
       ],
-      verify: (bloc) =>
-          mockUpdateTodo(const update.Params(todo: testOriginalTodo)),
-    );
-
-    blocTest(
-      'Should emit state status TodoStatus.[loading, failure] when a ServerFailure is returned',
-      build: () {
-        when(mockUpdateTodo(const update.Params(todo: testOriginalTodo)))
-            .thenAnswer(
-          (_) async => const Left(ServerFailure()),
-        );
-
-        return bloc;
-      },
-      seed: () => const TodoState(todos: [testOriginalTodo]),
-      act: (bloc) => bloc.add(const TodoUpdated(todo: testOriginalTodo)),
-      expect: () => [
-        const TodoState(todos: [testOriginalTodo], status: TodoStatus.loading),
-        const TodoState(
-          todos: [testOriginalTodo],
-          status: TodoStatus.failure,
-          errorMessage: serverFailureMessage,
-        ),
-      ],
+      verify: (bloc) => mockUpdateTodo(update.Params(
+        todoId: testOriginalTodo.id,
+        title: testUpdatedTodo.title,
+        description: testUpdatedTodo.description,
+      )),
     );
 
     blocTest(
       'Should emit state status TodoStatus.[loading, failure] when a CacheFailure is returned',
       build: () {
-        when(mockUpdateTodo(const update.Params(todo: testOriginalTodo)))
-            .thenAnswer(
+        when(mockUpdateTodo(update.Params(
+          todoId: testOriginalTodo.id,
+          title: testUpdatedTodo.title,
+          description: testUpdatedTodo.description,
+        ))).thenAnswer(
           (_) async => const Left(CacheFailure()),
         );
 
         return bloc;
       },
-      seed: () => const TodoState(todos: [testOriginalTodo]),
-      act: (bloc) => bloc.add(const TodoUpdated(todo: testOriginalTodo)),
+      seed: () => TodoState(todos: [testOriginalTodo]),
+      act: (bloc) => bloc.add(TodoUpdated(
+        todoId: testOriginalTodo.id,
+        title: testUpdatedTodo.title,
+        description: testUpdatedTodo.description,
+      )),
       expect: () => [
-        const TodoState(todos: [testOriginalTodo], status: TodoStatus.loading),
-        const TodoState(
+        TodoState(todos: [testOriginalTodo], status: TodoStatus.loading),
+        TodoState(
           todos: [testOriginalTodo],
           status: TodoStatus.failure,
           errorMessage: cacheFailureMessage,
@@ -466,8 +412,9 @@ void main() {
       ],
     );
   });
+
   group('TodoMarkAsCompleted', () {
-    const testOriginalTodo = Todo(
+    final testOriginalTodo = Todo(
       id: '1',
       title: 'test original title',
       description: 'test description',
@@ -475,74 +422,56 @@ void main() {
       dateUpdated: 'test dateUpdated',
       isCompleted: false,
     );
-    const testUpdatedTodo = Todo(
-      id: '1',
-      title: 'test updated title',
-      description: 'test description',
-      dateCreated: 'test dateCreated',
-      dateUpdated: 'test dateUpdated',
-      isCompleted: true,
+    final testUpdatedTodo = testOriginalTodo.copyWith(
+      isCompleted: !testOriginalTodo.isCompleted,
     );
     blocTest(
       'Should emit state status TodoStatus.[loading, success] when a todo is set to complete',
       build: () {
-        when(mockUpdateTodo(const update.Params(todo: testOriginalTodo)))
+        when(mockUpdateTodo(update.Params(
+                todoId: testOriginalTodo.id,
+                isComplete: testUpdatedTodo.isCompleted)))
             .thenAnswer(
-          (_) async => const Right(testUpdatedTodo),
+          (_) async => Right(testUpdatedTodo),
         );
 
         return bloc;
       },
-      seed: () => const TodoState(todos: [testOriginalTodo]),
-      act: (bloc) =>
-          bloc.add(const TodoToggleCompleted(todo: testOriginalTodo)),
+      seed: () => TodoState(todos: [testOriginalTodo]),
+      act: (bloc) => bloc.add(TodoToggleCompleted(
+        todoId: testOriginalTodo.id,
+        // isComplete: testUpdatedTodo.isCompleted,
+      )),
       expect: () => [
-        const TodoState(todos: [testOriginalTodo], status: TodoStatus.loading),
-        const TodoState(todos: [testUpdatedTodo], status: TodoStatus.success),
+        // TodoState(todos: [testOriginalTodo], status: TodoStatus.loading),
+        TodoState(todos: [testUpdatedTodo], status: TodoStatus.success),
       ],
-      verify: (bloc) =>
-          mockUpdateTodo(const update.Params(todo: testOriginalTodo)),
-    );
-
-    blocTest(
-      'Should emit state status TodoStatus.[loading, failure] when a ServerFailure is returned',
-      build: () {
-        when(mockUpdateTodo(const update.Params(todo: testOriginalTodo)))
-            .thenAnswer(
-          (_) async => const Left(ServerFailure()),
-        );
-
-        return bloc;
-      },
-      seed: () => const TodoState(todos: [testOriginalTodo]),
-      act: (bloc) =>
-          bloc.add(const TodoToggleCompleted(todo: testOriginalTodo)),
-      expect: () => [
-        const TodoState(todos: [testOriginalTodo], status: TodoStatus.loading),
-        const TodoState(
-          todos: [testOriginalTodo],
-          status: TodoStatus.failure,
-          errorMessage: serverFailureMessage,
-        ),
-      ],
+      verify: (bloc) => mockUpdateTodo(update.Params(
+        todoId: testOriginalTodo.id,
+        isComplete: testUpdatedTodo.isCompleted,
+      )),
     );
 
     blocTest(
       'Should emit state status TodoStatus.[loading, failure] when a CacheFailure is returned',
       build: () {
-        when(mockUpdateTodo(const update.Params(todo: testOriginalTodo)))
+        when(mockUpdateTodo(update.Params(
+                todoId: testOriginalTodo.id,
+                isComplete: testUpdatedTodo.isCompleted)))
             .thenAnswer(
           (_) async => const Left(CacheFailure()),
         );
 
         return bloc;
       },
-      seed: () => const TodoState(todos: [testOriginalTodo]),
-      act: (bloc) =>
-          bloc.add(const TodoToggleCompleted(todo: testOriginalTodo)),
+      seed: () => TodoState(todos: [testOriginalTodo]),
+      act: (bloc) => bloc.add(TodoToggleCompleted(
+        todoId: testOriginalTodo.id,
+        // isComplete: testUpdatedTodo.isCompleted,
+      )),
       expect: () => [
-        const TodoState(todos: [testOriginalTodo], status: TodoStatus.loading),
-        const TodoState(
+        // TodoState(todos: [testOriginalTodo], status: TodoStatus.loading),
+        TodoState(
           todos: [testOriginalTodo],
           status: TodoStatus.failure,
           errorMessage: cacheFailureMessage,
@@ -553,7 +482,7 @@ void main() {
 
   group('TodoClearCompleted', () {
     // Provide an initial state with a list of todos, some of which are completed
-    const List<Todo> testList = [
+    List<Todo> testList = [
       Todo(
         id: '1',
         title: 'Todo 1',
@@ -580,7 +509,7 @@ void main() {
       ),
     ];
 
-    const List<Todo> testClearList = [
+    List<Todo> testClearList = [
       Todo(
         id: '1',
         title: 'Todo 1',
@@ -601,11 +530,11 @@ void main() {
     blocTest(
       'should emit the correct state after clearing completed todos',
       build: () => bloc,
-      seed: () => const TodoState(todos: testList),
+      seed: () => TodoState(todos: testList),
       act: (bloc) => bloc.add(const TodoClearCompleted()),
       expect: () => [
-        const TodoState(todos: testList, status: TodoStatus.loading),
-        const TodoState(todos: testClearList, status: TodoStatus.success),
+        TodoState(todos: testList, status: TodoStatus.loading),
+        TodoState(todos: testClearList, status: TodoStatus.success),
       ],
     );
   });

@@ -18,7 +18,7 @@ void main() {
     usecase = GetAllTodos(mockTodoRepository);
   });
 
-  const List<Todo> testList = [
+  List<Todo> testList = [
     Todo(
       id: '1',
       title: 'test title',
@@ -38,31 +38,14 @@ void main() {
   test('should get all todos', () async {
     //Arrange
     when(mockTodoRepository.getAllTodos()).thenAnswer(
-      (_) async => const Right(
-        <Todo>[
-          Todo(
-            id: '1',
-            title: 'test title',
-            description: 'test description',
-            dateCreated: 'test dateCreated',
-            dateUpdated: 'test dateUpdated',
-          ),
-          Todo(
-            id: '2',
-            title: 'test title',
-            description: 'test description',
-            dateCreated: 'test dateCreated',
-            dateUpdated: 'test dateUpdated',
-          ),
-        ],
-      ),
+      (_) async => Right(testList),
     );
     //Act
 
     final result = await usecase(const NoParams());
 
     //Assert
-    expect(result, const Right(testList));
+    expect(result, Right(testList));
     verify(mockTodoRepository.getAllTodos());
     verifyNoMoreInteractions(mockTodoRepository);
   });

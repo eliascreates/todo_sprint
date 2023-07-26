@@ -1,133 +1,118 @@
-
 import 'package:flutter_test/flutter_test.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:mockito/annotations.dart';
-import 'package:hive/hive.dart';
 import 'package:mockito/mockito.dart';
 import 'package:todo_sprint/core/error/exceptions.dart';
 import 'package:todo_sprint/features/todo/data/datasources/todo_local_data_source.dart';
-import 'package:todo_sprint/features/todo/data/models/todo_model.dart';
+import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
+import 'package:uuid/uuid.dart';
 import './todo_local_data_source_test.mocks.dart';
 
 @GenerateMocks([HiveInterface, Box])
-void main() {
-  late MockHiveInterface mockHive;
+void main() async {
   late TodoLocalDataSource dataSource;
-  late MockBox<TodoModel> mockBox;
+  late MockBox<Todo> mockBox;
+
+  const String todoBoxName = 'todo_box';
+
+  final mockHive = MockHiveInterface();
+
+  mockHive.registerAdapter(TodoAdapter());
+
   setUp(() {
-    mockHive = MockHiveInterface();
+    mockBox = MockBox<Todo>();
+
+    when(mockHive.box<Todo>(todoBoxName)).thenReturn(mockBox);
+
     dataSource = TodoLocalDataSourceImpl(mockHive);
-    mockBox = MockBox<TodoModel>();
-
-    const List<TodoModel> testList = [
-      TodoModel(
-        id: '1',
-        title: 'test title',
-        description: 'test description',
-        dateCreated: '2023-07-19T12:26:51.135Z',
-        dateUpdated: '2023-07-19T12:26:51.135Z',
-      ),
-      TodoModel(
-        id: '2',
-        title: 'test title',
-        description: 'test description',
-        dateCreated: '2023-07-19T12:56:14.456Z',
-        dateUpdated: '2023-07-19T12:56:14.456Z',
-      )
-    ];
-
-    final Map<dynamic, TodoModel> todosMap = {
-      for (var todo in testList) todo.id: todo
-    };
-
-    mockBox.putAll(todosMap);
   });
 
   group('createTodo', () {
-    test('should create a new todo to the box', () async {
-      var testTodo = TodoModel(
-        id: '3',
-        title: 'Test Todo',
-        description: 'Test description',
+    test('should create a new todo in the box', () async {
+      const title = 'Test Todo';
+      const description = 'This is a test todo';
+
+      var newTodo = Todo(
+        id: const Uuid().v1(),
+        title: title,
+        description: description,
         dateCreated: DateTime.now().toIso8601String(),
         dateUpdated: DateTime.now().toIso8601String(),
+        isCompleted: false,
       );
 
-      // Arrange
-      when(mockHive.openBox<TodoModel>('todo_box'))
-          .thenAnswer((_) => Future.value(mockBox));
+      //Arrange
+      when(mockBox.put(newTodo.id, newTodo)).thenAnswer((_) => Future.value());
 
-      // Act
-      final result = await dataSource.createTodo(testTodo);
+      //Act
+      final result = await dataSource.createTodo(
+        title: title,
+        description: description,
+      );
 
-      // Assert
-
-      //A step to ensure the DateTime.now() does not affect the test
-      testTodo = testTodo.copyWith(
+      //Assert
+      //? A step to ensure the DateTime.now() And Uuid().v1() does not affect the test
+      newTodo = newTodo.copyWith(
+        id: result.id,
         dateCreated: result.dateCreated,
         dateUpdated: result.dateCreated,
       );
 
-      expect(result, testTodo);
-      verify(mockBox.put('3', testTodo));
+      expect(result, equals(newTodo));
     });
 
-    test('should throw a CacheException when adding a todo to the box fails',
-        () async {
-      final testTodo = TodoModel(
-        id: '3',
-        title: 'Test Todo',
-        description: 'Test description',
-        dateCreated: DateTime.now().toIso8601String(),
-        dateUpdated: DateTime.now().toIso8601String(),
-      );
+    test('should throw a CacheException when Box.put fails', () async {
+      // Arrange
+      const title = 'Test Todo';
+      const description = 'This is a test todo';
 
       // Arrange
-      when(mockHive.openBox<TodoModel>('todo_box'))
-          .thenThrow(const CacheException());
+      when(mockBox.put(any, any)).thenThrow(const CacheException());
 
       // Act
       final call = dataSource.createTodo;
 
-      // Assert
+      //Assert
       expect(
-          () => call(testTodo), throwsA(const TypeMatcher<CacheException>()));
+        () => call(title: title, description: description),
+        throwsA(const TypeMatcher<CacheException>()),
+      );
     });
   });
-  group('getAllTodos', () {
-    const List<TodoModel> testList = [
-      TodoModel(
-        id: '1',
-        title: 'test title',
-        description: 'test description',
-        dateCreated: '2023-07-19T12:26:51.135Z',
-        dateUpdated: '2023-07-19T12:26:51.135Z',
-      ),
-      TodoModel(
-        id: '2',
-        title: 'test title',
-        description: 'test description',
-        dateCreated: '2023-07-19T12:56:14.456Z',
-        dateUpdated: '2023-07-19T12:56:14.456Z',
-      )
-    ];
 
-    test('getAllTodos should return a list of todos', () async {
+  group('getAllTodos', () {
+    test('should return a list of TodoModels', () async {
       // Arrange
-      when(mockHive.openBox<TodoModel>('todo_box'))
-          .thenAnswer((_) => Future.value(mockBox));
-      when(mockBox.values).thenReturn(testList);
+      final todos = [
+        Todo(
+          id: '1',
+          title: 'test title',
+          description: 'test description',
+          dateCreated: DateTime.now().toIso8601String(),
+          dateUpdated: DateTime.now().toIso8601String(),
+        ),
+        Todo(
+          id: '2',
+          title: 'test title',
+          description: 'test description',
+          dateCreated: DateTime.now().toIso8601String(),
+          dateUpdated: DateTime.now().toIso8601String(),
+        )
+      ];
+      when(mockBox.values.toList()).thenReturn(todos);
 
       // Act
       final result = await dataSource.getAllTodos();
 
       // Assert
-      expect(result, testList);
+      verify(mockBox.values.toList());
+      expect(result, equals(todos));
     });
-    test('should throw a cache error when unable to fetch list of todos', () {
+
+    test('should throw a CacheException when Box.values.toList fails',
+        () async {
       // Arrange
-      when(mockHive.openBox<TodoModel>('todo_box'))
-          .thenAnswer((_) => Future.value(mockBox));
-      when(mockBox.values).thenThrow(const CacheException());
+      when(mockBox.values.toList()).thenThrow(const CacheException());
 
       //Act
       final call = dataSource.getAllTodos;
@@ -136,10 +121,11 @@ void main() {
       expect(() => call(), throwsA(const TypeMatcher<CacheException>()));
     });
   });
+
   group('getTodoById', () {
     test('should return a todo if it exists', () async {
       const todoId = '1';
-      final testTodo = TodoModel(
+      final testTodo = Todo(
         id: todoId,
         title: 'Test Todo',
         description: 'Test description',
@@ -148,8 +134,6 @@ void main() {
       );
 
       // Arrange
-      when(mockHive.openBox<TodoModel>('todo_box'))
-          .thenAnswer((_) => Future.value(mockBox));
       when(mockBox.get(todoId)).thenReturn(testTodo);
 
       // Act
@@ -159,13 +143,25 @@ void main() {
       expect(result, equals(testTodo));
     });
 
-    test('should throw CacheException if todo does not exist', () {
+    test(
+        'getTodoById should throw a CacheException when Todo with the given id does not exist',
+        () async {
+      // Arrange
+      const todoId = 'non_existent_todo_id';
+
+      when(mockBox.get(todoId)).thenReturn(null);
+
+      final call = dataSource.getTodoById;
+
+      // Assert
+      expect(() => call(todoId), throwsA(const TypeMatcher<CacheException>()));
+    });
+
+    test('should throw a CacheException when Box.get fails', () {
       const todoId = 'non_existent_todo_id';
 
       // Arrange
-      when(mockHive.openBox<TodoModel>('todo_box'))
-          .thenAnswer((_) => Future.value(mockBox));
-      when(mockBox.get(todoId)).thenReturn(null);
+      when(mockBox.get(todoId)).thenThrow(const CacheException());
 
       // Act
       final call = dataSource.getTodoById;
@@ -174,34 +170,37 @@ void main() {
       expect(() => call(todoId), throwsA(const TypeMatcher<CacheException>()));
     });
   });
-  group('updateTodo', () {
-    test('updateTodo should update an existing todo in the box', () async {
-      const todoId = '1';
-      final existingTodo = TodoModel(
-        id: todoId,
-        title: 'Test Todo',
-        description: 'Test description',
-        dateCreated: DateTime.now().toIso8601String(),
-        dateUpdated: DateTime.now().toIso8601String(),
-      );
 
-      var updatedTodo = TodoModel(
-        id: todoId,
-        title: 'Updated Todo',
-        description: 'Updated description',
-        dateCreated: existingTodo.dateCreated,
-        dateUpdated: DateTime.now().toIso8601String(),
-      );
+  group('updateTodo', () {
+    const todoId = '1';
+    final existingTodo = Todo(
+      id: todoId,
+      title: 'Test Todo',
+      description: 'Test description',
+      dateCreated: DateTime.now().toIso8601String(),
+      dateUpdated: DateTime.now().toIso8601String(),
+    );
+
+    var updatedTodo = Todo(
+      id: todoId,
+      title: 'Updated Todo',
+      description: 'Updated description',
+      dateCreated: existingTodo.dateCreated,
+      dateUpdated: DateTime.now().toIso8601String(),
+    );
+
+    test('should update an existing todo in the box', () async {
       // Arrange
-      when(mockHive.openBox<TodoModel>('todo_box'))
-          .thenAnswer((_) => Future.value(mockBox));
       when(mockBox.get(todoId)).thenReturn(existingTodo);
 
       // Act
-      final result = await dataSource.updateTodo(updatedTodo);
+      final result = await dataSource.updateTodo(
+        todoId,
+        title: updatedTodo.title,
+        description: updatedTodo.description,
+      );
 
       // Assert
-
       //A step to ensure DateTime.now() does not affect the test.
       updatedTodo = updatedTodo.copyWith(dateUpdated: result.dateUpdated);
 
@@ -209,10 +208,28 @@ void main() {
       verify(mockBox.put(todoId, updatedTodo));
     });
 
-    test('updateTodo should throw an CacheException if todo does not exist',
-        () async {
+    test('should throw CacheException when todo does not exist', () async {
+      //Arrange
+      when(mockBox.get(todoId)).thenReturn(null);
+
+      //Act
+      final call = dataSource.updateTodo;
+
+      expect(
+        () => call(todoId,
+            title: updatedTodo.title,
+            description: updatedTodo.description,
+            isComplete: updatedTodo.isCompleted),
+        throwsA(const TypeMatcher<CacheException>()),
+      );
+
+      // Verify that put method was not called when todo does not exist
+      verifyNever(mockBox.put(todoId, updatedTodo));
+    });
+
+    test('should throw CacheException when an error occurs', () async {
       const todoId = 'non_existent_todo_id';
-      final updatedTodo = TodoModel(
+      final updatedTodo = Todo(
         id: todoId,
         title: 'Updated Todo',
         description: 'Updated description',
@@ -221,25 +238,33 @@ void main() {
       );
 
       // Arrange
-      when(mockHive.openBox<TodoModel>('todo_box'))
-          .thenAnswer((_) => Future.value(mockBox));
-      when(mockBox.get(todoId)).thenReturn(null);
+      when(mockBox.get(todoId)).thenThrow(const CacheException());
       when(mockBox.put(updatedTodo.id, updatedTodo))
           .thenThrow(const CacheException());
 
       final call = dataSource.updateTodo;
       // Assert
-      expect(() => call(updatedTodo), throwsA(isInstanceOf<CacheException>()));
+      expect(
+          () => call(todoId,
+              title: updatedTodo.title, description: updatedTodo.description),
+          throwsA(const TypeMatcher<CacheException>()));
     });
   });
+
   group('deleteTodo', () {
-    test('deleteTodo should delete an existing todo from the box', () async {
-      const todoId = 'test_todo_id';
+    const todoId = 'test_todo_id';
+    final existingTodo = Todo(
+      id: todoId,
+      title: 'Updated Todo',
+      description: 'Updated description',
+      dateCreated: DateTime.now().toIso8601String(),
+      dateUpdated: DateTime.now().toIso8601String(),
+    );
 
+    test('should delete an existing todo from the box', () async {
       // Arrange
-      when(mockHive.openBox<TodoModel>('todo_box'))
-          .thenAnswer((_) async => Future.value(mockBox));
-
+      when(mockBox.get(todoId)).thenReturn(existingTodo);
+      when(mockBox.delete(todoId)).thenAnswer((_) => Future.value());
 
       // Act
       final result = await dataSource.deleteTodo(todoId);
@@ -249,13 +274,24 @@ void main() {
       verify(mockBox.delete(todoId));
     });
 
-    test('deleteTodo should throw an CacheException if todo does not exist',
-        () async {
+    test('should throw an CacheException when todo does not exist', () async {
+      const todoId = 'non_existent_todo_id';
+
+      //Arrange
+      when(mockBox.get(todoId)).thenReturn(null);
+
+      //Act
+      final call = dataSource.deleteTodo;
+
+      //Assert
+      expect(() => call(todoId), throwsA(const TypeMatcher<CacheException>()));
+    });
+
+    test('should throw an CacheException when the box.delete fails', () async {
       const todoId = 'non_existent_todo_id';
 
       // Arrange
-      when(mockHive.openBox<TodoModel>('todo_box'))
-          .thenAnswer((_) async => await Future.value(mockBox));
+      when(mockBox.get(todoId)).thenReturn(existingTodo);
 
       when(mockBox.delete(todoId)).thenThrow(const CacheException());
 

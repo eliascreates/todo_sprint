@@ -14,14 +14,15 @@ class CreateTodo extends Usecase<Todo, Params> {
 
   @override
   Future<Either<Failure, Todo>> call(Params params) async {
-    return await repository.createTodo(params.todo);
+    return await repository.createTodo(title: params.title, description: params.description);
   }
 }
 
 class Params extends Equatable {
-  final Todo todo;
-  const Params({required this.todo});
+  final String title;
+  final String description;
+  const Params({required this.title, required this.description});
 
   @override
-  List<Object?> get props => [todo];
+  List<Object?> get props => [title, description];
 }

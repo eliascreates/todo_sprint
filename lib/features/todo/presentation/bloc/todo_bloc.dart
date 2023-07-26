@@ -14,14 +14,8 @@ import 'package:todo_sprint/features/todo/domain/usecases/get_todo.dart'
 import 'package:todo_sprint/features/todo/domain/usecases/update_todo.dart'
     as update;
 
-
 part 'todo_event.dart';
 part 'todo_state.dart';
-
-const String invalidInputFailureMessage =
-    'Invalid Input - The number must be a positive integer or zero';
-const String cacheFailureMessage = 'Server Failure';
-const String serverFailureMessage = 'Cache Failure';
 
 class TodoBloc extends Bloc<TodoEvent, TodoState> {
   final create.CreateTodo createTodo;
@@ -29,7 +23,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   final get_todo.GetTodo getTodo;
   final update.UpdateTodo updateTodo;
   final delete.DeleteTodo deleteTodo;
-
 
   TodoBloc({
     required this.createTodo,
@@ -54,7 +47,8 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     Emitter<TodoState> emit,
   ) async {
     emit(state.copyWith(status: TodoStatus.loading));
-    final result = await createTodo(create.Params(todo: event.todo));
+    final result = await createTodo(
+        create.Params(title: event.title, description: event.description));
 
     emit(
       await result.fold(
@@ -71,7 +65,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         },
       ),
     );
-
   }
 
   Future<void> _onTodoByIdFetched(
@@ -80,7 +73,7 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   ) async {
     emit(state.copyWith(status: TodoStatus.loading));
 
-    final result = await getTodo.call(get_todo.Params(todoId: event.todoId));
+    final result = await getTodo(get_todo.Params(todoId: event.todoId));
 
     emit(
       await result.fold(
@@ -93,7 +86,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         ),
       ),
     );
-
   }
 
   Future<void> _onTodoFetchedAll(
@@ -115,7 +107,6 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         ),
       ),
     );
-
   }
 
   Future<void> _onTodoUpdated(
@@ -124,7 +115,11 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
   ) async {
     emit(state.copyWith(status: TodoStatus.loading));
 
-    final result = await updateTodo(update.Params(todo: event.todo));
+    final result = await updateTodo(update.Params(
+      todoId: event.todoId,
+      title: event.title,
+      description: event.description,
+    ));
 
     emit(
       await result.fold(
@@ -141,16 +136,14 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
         },
       ),
     );
-
   }
 
   Future<void> _onTodoDeleted(
     TodoDeleted event,
     Emitter<TodoState> emit,
   ) async {
-    emit(state.copyWith(status: TodoStatus.loading));
-
     final result = await deleteTodo(delete.Params(todoId: event.todoId));
+
     emit(
       await result.fold(
         (failure) async => state.copyWith(
@@ -159,7 +152,8 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
           final updatedTodos =
               state.todos.where((todo) => todo.id != event.todoId).toList();
 
-          return state.copyWith(todos: updatedTodos, status: TodoStatus.success);
+          return state.copyWith(
+              todos: updatedTodos, status: TodoStatus.success);
         },
       ),
     );
@@ -169,26 +163,35 @@ class TodoBloc extends Bloc<TodoEvent, TodoState> {
     TodoToggleCompleted event,
     Emitter<TodoState> emit,
   ) async {
-    emit(state.copyWith(status: TodoStatus.loading));
+    final todo =
+        state.todos.firstWhere((element) => element.id == event.todoId);
+    final updatedTodo = todo.copyWith(isCompleted: !todo.isCompleted);
 
-    final result = await updateTodo(update.Params(todo: event.todo));
+    // Update the todo using the updateTodoUseCase
+    final result = await updateTodo(update.Params(
+      todoId: event.todoId,
+      title: updatedTodo.title,
+      description: updatedTodo.description,
+      isComplete: updatedTodo.isCompleted,
+    ));
 
     emit(
       await result.fold(
         (failure) async => state.copyWith(
             status: TodoStatus.failure, errorMessage: failure.message),
-        (modifiedTodo) async {
+        (updatedTodo) async {
+          final updatedTodos = state.todos.map((t) {
+            if (t.id == event.todoId) {
+              return updatedTodo;
+            } else {
+              return t;
+            }
+          }).toList();
           return state.copyWith(
-            todos: state.todos
-                .map((todo) => todo.id == modifiedTodo.id ? modifiedTodo : todo)
-                .toList(),
-            status: TodoStatus.success,
-            errorMessage: null,
-          );
+              todos: updatedTodos, status: TodoStatus.success);
         },
       ),
     );
-
   }
 
   Future<void> _onTodoClearCompleted(
@@ -209,13 +212,10 @@ extension _MapFailureToMessage on Failure {
   // ignore: unused_element
   String get message {
     switch (this) {
-      case ServerFailure():
-        return serverFailureMessage;
       case CacheFailure():
-        return cacheFailureMessage;
+        return const CacheFailure().message;
       default:
         return "Unexpected Error";
     }
-
   }
 }

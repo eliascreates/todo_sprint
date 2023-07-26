@@ -7,7 +7,7 @@ void main() {
     late Todo todo;
 
     setUp(() {
-      todo = const Todo(
+      todo =  Todo(
         id: '1',
         title: 'Test Title',
         description: 'Test Description',

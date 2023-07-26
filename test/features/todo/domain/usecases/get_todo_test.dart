@@ -19,7 +19,7 @@ void main() {
 
   const String testId = '1';
 
-  const testTodo = Todo(
+  final testTodo = Todo(
     id: '1',
     title: 'test title',
     description: 'test description',
@@ -30,14 +30,14 @@ void main() {
   test('should get a single todo', () async {
     //Arrange
     when(mockTodoRepository.getTodoById(testId)).thenAnswer(
-      (_) async => const Right(testTodo),
+      (_) async => Right(testTodo),
     );
 
     //Act
     final result = await usecase(const Params(todoId: testId));
 
     //Assert
-    expect(result, const Right(testTodo));
+    expect(result,  Right(testTodo));
     verify(mockTodoRepository.getTodoById(testId));
     verifyNoMoreInteractions(mockTodoRepository);
   });

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'core/routes/app_routes.dart';
-import 'core/themes/app_theme.dart';
+import 'config/routes/app_routes.dart';
+import 'config/themes/app_theme.dart';
 import 'features/todo/domain/usecases/create_todo.dart';
 import 'features/todo/domain/usecases/delete_todo.dart';
 import 'features/todo/domain/usecases/get_all_todo.dart';
@@ -13,7 +13,7 @@ import 'injector_container.dart' as di;
 import 'injector_container.dart';
 
 void main() async {
-  WidgetsFlutterBinding.ensureInitialized();
+  // WidgetsFlutterBinding.ensureInitialized();
   await di.init();
 
   runApp(const MyApp());

@@ -3,18 +3,19 @@ import 'package:flutter/material.dart';
 import '../../domain/entities/todo.dart';
 
 class TodoListTile extends StatelessWidget {
-  const TodoListTile({
-    super.key,
-    required this.todo,
-    required this.onTap,
-    this.onToggleComplete,
-    this.onDismiss,
-  });
+  const TodoListTile(
+      {super.key,
+      required this.todo,
+      required this.onTap,
+      this.onToggleComplete,
+      this.onDismiss,
+      this.popupItems});
 
   final Todo todo;
   final VoidCallback? onTap;
-  final ValueChanged<bool>? onToggleComplete;
+  final void Function(bool?)? onToggleComplete;
   final DismissDirectionCallback? onDismiss;
+  final List<PopupMenuEntry<dynamic>>? popupItems;
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +23,7 @@ class TodoListTile extends StatelessWidget {
     final captionColor = theme.textTheme.bodySmall?.color;
 
     return Dismissible(
-      key: Key('todoListTile_dismissible_${todo.id}'),
+      key: UniqueKey(),
       onDismissed: onDismiss,
       direction: DismissDirection.endToStart,
       child: Container(
@@ -31,10 +32,11 @@ class TodoListTile extends StatelessWidget {
           color: theme.cardColor,
           boxShadow: [
             BoxShadow(
-                color: theme.shadowColor.withOpacity(0.1),
-                blurRadius: 4,
-                spreadRadius: 1,
-                offset: const Offset(0, 2)),
+              color: theme.shadowColor.withOpacity(0.1),
+              blurRadius: 4,
+              spreadRadius: 1,
+              offset: const Offset(0, 2),
+            ),
           ],
           borderRadius: BorderRadius.circular(20),
         ),
@@ -55,6 +57,7 @@ class TodoListTile extends StatelessWidget {
                     decoration: TextDecoration.lineThrough),
           ),
           subtitle: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
                 todo.description,
@@ -82,33 +85,16 @@ class TodoListTile extends StatelessWidget {
             child: Checkbox(
               shape: const CircleBorder(),
               value: todo.isCompleted,
-              onChanged: (value) => value,
+              onChanged: onToggleComplete,
             ),
           ),
-          trailing: PopupMenuButton(
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-            itemBuilder: (context) => [
-              PopupMenuItem(
-                child: Row(
-                  children: [
-                    const Icon(Icons.edit),
-                    const SizedBox(width: 20),
-                    Text('Edit', style: TextStyle(color: captionColor)),
-                  ],
+          trailing: popupItems == null
+              ? null
+              : PopupMenuButton(
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(20)),
+                  itemBuilder: (context) => popupItems!,
                 ),
-              ),
-              PopupMenuItem(
-                child: Row(
-                  children: [
-                    const Icon(Icons.delete),
-                    const SizedBox(width: 20),
-                    Text('Delete', style: TextStyle(color: captionColor)),
-                  ],
-                ),
-              ),
-            ],
-          ),
         ),
       ),
     );

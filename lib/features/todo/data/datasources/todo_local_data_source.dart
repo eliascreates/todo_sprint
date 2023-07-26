@@ -1,38 +1,41 @@
-import 'package:flutter/foundation.dart';
+// import 'package:flutter/foundation.dart';
 import 'package:hive/hive.dart';
 import 'package:todo_sprint/core/error/exceptions.dart';
-import 'package:todo_sprint/features/todo/data/models/todo_model.dart';
+import 'package:uuid/uuid.dart';
+
+import '../../domain/entities/todo.dart';
 
 /// Interface for the todo local data source.
 abstract class TodoLocalDataSource {
   /// Retrieves all todos from the local data source.
   ///
-  /// Returns a [List] of [TodoModel] objects.
+  /// Returns a [List] of [Todo] objects.
   ///
   /// Throws a [CacheException] if the operation fails.
-  Future<List<TodoModel>> getAllTodos();
+  Future<List<Todo>> getAllTodos();
 
   /// Retrieves a specific todo by its ID from the local data source.
   ///
   /// [todoId] represents the unique ID of the todo to retrieve.
-  /// Returns the corresponding [TodoModel] object.
+  /// Returns the corresponding [Todo] object.
   ///
   /// Throws a [CacheException] if the operation fails.
-  Future<TodoModel> getTodoById(String todoId);
+  Future<Todo> getTodoById(String todoId);
 
   /// Creates a new todo and saves it to the local data source.
   ///
-  /// [TodoModel] represents the todo to be created.
+  /// [Todo] represents the todo to be created.
   ///
   /// Throws a [CacheException] if the operation fails.
-  Future<TodoModel> createTodo(TodoModel todo);
+  Future<Todo> createTodo({required String title, required String description});
 
   /// Updates an existing todo and persists the changes to the local data source.
   ///
-  /// [TodoModel] represents the todo with updated details.
+  /// [Todo] represents the todo with updated details.
   ///
   /// Throws a [CacheException] if the operation fails.
-  Future<TodoModel> updateTodo(TodoModel todo);
+  Future<Todo> updateTodo(String todoId,
+      {String? title, String? description, bool? isComplete});
 
   /// Deletes a specific todo from the local data source.
   ///
@@ -47,20 +50,30 @@ const String _todoBoxName = 'todo_box';
 class TodoLocalDataSourceImpl implements TodoLocalDataSource {
   final HiveInterface hive;
 
-  TodoLocalDataSourceImpl(this.hive);
+  late Box<Todo> box;
+
+  TodoLocalDataSourceImpl(this.hive) {
+    box = hive.box<Todo>(_todoBoxName);
+  }
 
   @override
-  Future<TodoModel> createTodo(TodoModel todo) async {
-    todo = todo.copyWith(
+  Future<Todo> createTodo({
+    required String title,
+    required String description,
+  }) async {
+    final newTodo = Todo(
+      id: const Uuid().v1(),
+      title: title,
+      description: description,
       dateCreated: DateTime.now().toIso8601String(),
       dateUpdated: DateTime.now().toIso8601String(),
+      isCompleted: false,
     );
 
     try {
-      final box = await hive.openBox<TodoModel>(_todoBoxName);
-      await box.put(todo.id, todo);
-      debugPrint("CREATED: $todo");
-      return todo;
+      await box.put(newTodo.id, newTodo);
+
+      return newTodo;
     } catch (e) {
       throw const CacheException();
     }
@@ -69,58 +82,58 @@ class TodoLocalDataSourceImpl implements TodoLocalDataSource {
   @override
   Future<String> deleteTodo(String todoId) async {
     try {
-      final box = await hive.openBox<TodoModel>(_todoBoxName);
-      box.delete(todoId);
+      final todo = box.get(todoId);
+      if (todo == null) throw const CacheException();
 
-      return 'success';
+      await box.delete(todoId);
+      return Future.value('success');
     } catch (e) {
       throw const CacheException();
     }
   }
 
   @override
-  Future<List<TodoModel>> getAllTodos() async {
+  Future<List<Todo>> getAllTodos() async {
     try {
-      final box = await hive.openBox<TodoModel>(_todoBoxName);
-      debugPrint(box.values.toList().toString());
-      return box.values.toList();
+      final todos = box.values.toList();
+
+      return Future.value(todos);
     } catch (e) {
       throw const CacheException();
     }
   }
 
   @override
-  Future<TodoModel> getTodoById(String todoId) async {
+  Future<Todo> getTodoById(String todoId) async {
     try {
-      final box = await hive.openBox<TodoModel>(_todoBoxName);
+      final todo = box.get(todoId);
+      if (todo == null) throw const CacheException();
 
+      return Future.value(todo);
+    } catch (e) {
+      throw const CacheException();
+    }
+  }
+
+  @override
+  Future<Todo> updateTodo(String todoId,
+      {String? title, String? description, bool? isComplete}) async {
+    try {
       final todo = box.get(todoId);
 
       if (todo == null) throw const CacheException();
 
-      return todo;
-    } catch (e) {
-      throw const CacheException();
-    }
-  }
-
-  @override
-  Future<TodoModel> updateTodo(TodoModel todo) async {
-    try {
-      final box = await hive.openBox<TodoModel>(_todoBoxName);
-
-      final existingTodo = box.get(todo.id);
-
-      final TodoModel updatedTodo = existingTodo!.copyWith(
-        title: todo.title,
-        description: todo.description,
-        isCompleted: todo.isCompleted,
+      final updatedTodo = todo.copyWith(
+        title: title ?? todo.title,
+        description: description ?? todo.description,
+        isCompleted: isComplete ?? todo.isCompleted,
         dateUpdated: DateTime.now().toIso8601String(),
       );
 
-      await box.put(updatedTodo.id, updatedTodo);
+      // Saves the updated Todo back to the box
+      await box.put(todoId, updatedTodo);
 
-      return updatedTodo;
+      return Future.value(updatedTodo);
     } catch (e) {
       throw const CacheException();
     }

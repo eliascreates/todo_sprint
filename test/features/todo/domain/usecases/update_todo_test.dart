@@ -14,14 +14,14 @@ void main() {
     usecase = UpdateTodo(mockTodoRepository);
   });
 
-  const testOriginalTodo = Todo(
+  final testOriginalTodo = Todo(
     id: '1',
     title: 'test original title',
     description: 'test description',
     dateCreated: 'test dateCreated',
     dateUpdated: 'test dateUpdated',
   );
-  const testUpdatedTodo = Todo(
+  final testUpdatedTodo = Todo(
     id: '1',
     title: 'test updated title',
     description: 'test description',
@@ -31,16 +31,28 @@ void main() {
 
   test(' should update a todo', () async {
     //Arrange
-    when(mockTodoRepository.updateTodo(testOriginalTodo)).thenAnswer(
-      (_) async => const Right(testUpdatedTodo),
+    when(mockTodoRepository.updateTodo(
+      testOriginalTodo.id,
+      title: testUpdatedTodo.title,
+      description: testUpdatedTodo.description,
+    )).thenAnswer(
+      (_) async => Right(testUpdatedTodo),
     );
 
     //Act
-    final result = await usecase(const Params(todo: testOriginalTodo));
+    final result = await usecase(Params(
+      todoId: testOriginalTodo.id,
+      title: testUpdatedTodo.title,
+      description: testUpdatedTodo.description,
+    ));
 
     //Assert
-    expect(result, const Right(testUpdatedTodo));
-    verify(mockTodoRepository.updateTodo(testOriginalTodo));
+    expect(result, Right(testUpdatedTodo));
+    verify(mockTodoRepository.updateTodo(
+      testOriginalTodo.id,
+      title: testUpdatedTodo.title,
+      description: testUpdatedTodo.description,
+    ));
     verifyNoMoreInteractions(mockTodoRepository);
   });
 }
