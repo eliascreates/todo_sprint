@@ -2,18 +2,12 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
-import 'package:http/http.dart' as http;
-import 'package:internet_connection_checker/internet_connection_checker.dart';
-
-// import 'package:todo_sprint/core/network/network_info.dart';
 import 'package:todo_sprint/features/todo/data/datasources/todo_local_data_source.dart';
-// import 'package:todo_sprint/features/todo/data/datasources/todo_remote_data_source.dart';
 import 'package:todo_sprint/features/todo/data/repositories/todo_repository_impl.dart';
 import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
 import 'package:todo_sprint/features/todo/domain/repositories/todo_repository.dart';
 
 import 'config/debug/bloc_observer.dart';
-// import 'features/todo/data/models/todo_model.dart';
 import 'features/todo/domain/usecases/create_todo.dart';
 import 'features/todo/domain/usecases/delete_todo.dart';
 import 'features/todo/domain/usecases/get_all_todo.dart';
@@ -36,17 +30,12 @@ Future<void> init() async {
   sl.registerLazySingleton<TodoRepository>(
     () => TodoRepositoryImpl(
       localDataSource: sl(),
-      // networkInfo: sl(),
     ),
   );
 
   //Data Sources
   sl.registerLazySingleton<TodoLocalDataSource>(
       () => TodoLocalDataSourceImpl(sl()));
-
-  // ? Core
-
-  // sl.registerLazySingleton<NetworkInfo>(() => NetworkInfoImpl(sl()));
 
   // ? EXTERNAL
 
@@ -61,6 +50,4 @@ Future<void> init() async {
 
   sl.registerLazySingleton<HiveInterface>(() => Hive);
 
-  sl.registerLazySingleton(() => http.Client());
-  sl.registerLazySingleton(() => InternetConnectionChecker());
 }

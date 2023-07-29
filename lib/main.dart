@@ -13,9 +13,7 @@ import 'injector_container.dart' as di;
 import 'injector_container.dart';
 
 void main() async {
-  // WidgetsFlutterBinding.ensureInitialized();
   await di.init();
-
   runApp(const MyApp());
 }
 
@@ -37,13 +35,14 @@ class MyApp extends StatelessWidget {
         builder: (context, box, child) {
           final isDark = box.get('isDark', defaultValue: false);
           return MaterialApp(
-              debugShowCheckedModeBanner: false,
-              title: 'Todo Sprint',
-              theme: AppTheme.lightTheme,
-              darkTheme: AppTheme.darkTheme,
-              themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
-              initialRoute: AppRoutes.home,
-              onGenerateRoute: AppRoutes.onGenerateRoute);
+            debugShowCheckedModeBanner: false,
+            title: 'Todo Sprint',
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: isDark ? ThemeMode.dark : ThemeMode.light,
+            initialRoute: AppRoutes.home,
+            onGenerateRoute: AppRoutes.onGenerateRoute,
+          );
         },
       ),
     );

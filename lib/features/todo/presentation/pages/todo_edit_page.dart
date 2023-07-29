@@ -36,9 +36,9 @@ class _TodoEditViewState extends State<TodoEditView> {
 
   @override
   Widget build(BuildContext context) {
-    bool isEmpty = widget.todo != null;
+    bool isNotEmpty = widget.todo != null;
 
-    if (isEmpty) {
+    if (isNotEmpty) {
       _titleController.text = widget.todo?.title ?? '';
       _descriptionController.text = widget.todo?.description ?? '';
     }
@@ -46,7 +46,7 @@ class _TodoEditViewState extends State<TodoEditView> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          isEmpty ? Strings.todoAddAppBarTitle : Strings.todoEditAppBarTitle,
+          isNotEmpty ? Strings.todoEditAppBarTitle : Strings.todoAddAppBarTitle,
         ),
       ),
       body: CupertinoScrollbar(
@@ -110,7 +110,7 @@ class _TodoEditViewState extends State<TodoEditView> {
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.secondary),
-                  child: Text(widget.todo != null ? "UPDATE" : "CREATE"),
+                  child: Text(isNotEmpty ? "UPDATE" : "CREATE"),
                 )
               ],
             ),
