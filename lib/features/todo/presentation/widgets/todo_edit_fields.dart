@@ -11,8 +11,10 @@ class _TitleField extends StatelessWidget {
       key: const Key('editTodoView_title_textFormField'),
       controller: controller,
       onChanged: onChanged,
-      decoration: const InputDecoration(
+      decoration: InputDecoration(
         labelText: 'TITLE',
+        helperText:
+            todo != null ? todo!.formatCreatedDate() : null,
         floatingLabelBehavior: FloatingLabelBehavior.always,
       ),
       maxLength: 50,

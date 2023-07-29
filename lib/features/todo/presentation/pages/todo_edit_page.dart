@@ -3,11 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_sprint/core/constants/strings.dart';
+import 'package:todo_sprint/core/constants/values.dart';
 import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
 
 import '../bloc/todo_bloc.dart';
 
-part '../widgets/todo_edit_field.dart';
+part '../widgets/todo_edit_fields.dart';
 
 class TodoEditPage extends StatelessWidget {
   const TodoEditPage({super.key, this.todo});
@@ -51,13 +52,13 @@ class _TodoEditViewState extends State<TodoEditView> {
       body: CupertinoScrollbar(
         child: SingleChildScrollView(
           child: Padding(
-            padding: const EdgeInsets.all(10),
+            padding: const EdgeInsets.all(Values.defaultPadding / 2),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                const SizedBox(height: 20),
+                const SizedBox(height: Values.defaultPadding),
                 Container(
-                  padding: const EdgeInsets.all(10),
+                  padding: const EdgeInsets.all(Values.defaultPadding / 2),
                   decoration: BoxDecoration(
                       color: Theme.of(context).cardColor,
                       borderRadius: BorderRadius.circular(4),
@@ -84,7 +85,7 @@ class _TodoEditViewState extends State<TodoEditView> {
                     ],
                   ),
                 ),
-                const SizedBox(height: 20),
+                const SizedBox(height: Values.defaultPadding),
                 ElevatedButton(
                   onPressed: () {
                     if (widget.todo case final todo?) {

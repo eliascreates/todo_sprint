@@ -1,32 +1,28 @@
 import 'package:flutter/material.dart';
+import 'package:todo_sprint/core/constants/colors.dart';
 
 class AppTheme {
   const AppTheme._();
 
   static get lightTheme => ThemeData(
-        appBarTheme: const AppBarTheme(
-          color: Color(0xFF993f62),
-        ),
-        colorScheme: ColorScheme.fromSwatch(
-          accentColor: const Color(0xFF993f62),
-        ),
+        primaryColor: AppColors.lPrimaryDarkerShade,
+        colorScheme: ColorScheme.fromSeed(seedColor: AppColors.lPrimaryColor),
         snackBarTheme: const SnackBarThemeData(
             behavior: SnackBarBehavior.floating,
-            backgroundColor: Color(0xffbf4e7a)),
+            backgroundColor: AppColors.lPrimaryLighterShade),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       );
 
   static get darkTheme => ThemeData(
         appBarTheme: const AppBarTheme(
-          color: Color(0xFF993f62),
+          color: AppColors.dPrimaryDarkerShade,
         ),
-        colorScheme: ColorScheme.fromSwatch(
-          brightness: Brightness.dark,
-          accentColor: const Color(0xFF993f62),
-        ),
+        primaryColor: AppColors.dPrimaryDarkerShade,
+        colorScheme: ColorScheme.fromSeed(
+            brightness: Brightness.dark, seedColor: AppColors.dPrimaryColor),
         snackBarTheme: const SnackBarThemeData(
-          behavior: SnackBarBehavior.floating,
-        ),
+            behavior: SnackBarBehavior.floating,
+            backgroundColor: AppColors.dPrimaryLighterShade),
         visualDensity: VisualDensity.adaptivePlatformDensity,
       );
 }

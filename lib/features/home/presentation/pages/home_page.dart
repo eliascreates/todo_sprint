@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_sprint/config/routes/app_routes.dart';
 import 'package:todo_sprint/core/constants/strings.dart';
+import 'package:todo_sprint/core/constants/values.dart';
 import 'package:todo_sprint/features/home/presentation/cubit/home_cubit.dart';
 import 'package:todo_sprint/features/settings/presentation/pages/settings_page.dart';
 import 'package:todo_sprint/features/todo/presentation/pages/todo_home_page.dart';
@@ -24,7 +25,7 @@ class HomeView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final selectedTab = context.select((HomeCubit cubit) => cubit.state.tab);
-
+    final theme = Theme.of(context);
     return Scaffold(
       body: IndexedStack(
         index: selectedTab.index,
@@ -32,6 +33,7 @@ class HomeView extends StatelessWidget {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       floatingActionButton: FloatingActionButton(
+        backgroundColor: theme.colorScheme.primary,
         key: const Key('homeView_addTodo_floatingActionButton'),
         onPressed: () => Navigator.of(context).pushNamed(AppRoutes.editPage),
         tooltip: Strings.todoHomeAddTooltip,
@@ -71,16 +73,18 @@ class _HomeTabButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return IconButton(
       tooltip: tooltip,
       key: const Key('homeTabButton_switchTabs_iconButton'),
-      splashRadius: 20,
+      splashRadius: Values.defaultPadding,
       onPressed: () => context.read<HomeCubit>().setTab(value),
       iconSize: 32,
       icon: icon,
       color: groupValue != value
-          ? Theme.of(context).focusColor
-          : Theme.of(context).colorScheme.secondary,
+          ? theme.focusColor
+          : theme.colorScheme.primary,
     );
   }
 }

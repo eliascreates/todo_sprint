@@ -123,12 +123,17 @@ class TodoLocalDataSourceImpl implements TodoLocalDataSource {
 
       if (todo == null) throw const CacheException();
 
-      final updatedTodo = todo.copyWith(
+      var updatedTodo = todo.copyWith(
         title: title ?? todo.title,
         description: description ?? todo.description,
         isCompleted: isComplete ?? todo.isCompleted,
-        dateUpdated: DateTime.now().toIso8601String(),
       );
+
+      if (todo.title != title || todo.description != description) {
+        updatedTodo = updatedTodo.copyWith(
+          dateUpdated: DateTime.now().toIso8601String(),
+        );
+      }
 
       // Saves the updated Todo back to the box
       await box.put(todoId, updatedTodo);

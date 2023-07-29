@@ -32,21 +32,39 @@ class Todo extends HiveObject {
     this.isCompleted = false,
   });
 
-  String formatDate(String date) {
+  String formatUpdatedDate() {
     DateTime now = DateTime.now();
-    DateTime dateTime = DateTime.parse(date);
+    DateTime dateTime = DateTime.parse(dateUpdated);
 
     int differenceInDays = now.difference(dateTime).inDays.abs();
 
     if (differenceInDays == 0) {
+      if (dateTime.day != now.day) {
+        return 'Yesterday - ${DateFormat('h:mm a').format(dateTime)}';
+      }
       return 'Today - ${DateFormat('h:mm a').format(dateTime)}';
     } else if (differenceInDays == 1) {
+      if (dateTime.day != now.day) {
+        return '2 days ago - ${DateFormat('h:mm a').format(dateTime)}';
+      }
       return 'Yesterday - ${DateFormat('h:mm a').format(dateTime)}';
     } else if (differenceInDays <= 7) {
-      return '$differenceInDays days ago';
+      return '$differenceInDays days ago - ${DateFormat('h:mm a').format(dateTime)}';
     } else {
       return DateFormat('MMM d, y, h:mm a').format(dateTime);
     }
+  }
+
+  String formatCreatedDate() {
+    DateTime now = DateTime.now();
+    DateTime dateTime = DateTime.parse(dateCreated);
+
+    int differenceInDays = now.difference(dateTime).inDays.abs();
+
+    if (differenceInDays < 365) {
+      return DateFormat('d MMM, h:mm a').format(dateTime);
+    }
+    return DateFormat('d MMM, y, h:mm a').format(dateTime);
   }
 
   Todo copyWith({

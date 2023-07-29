@@ -1,12 +1,82 @@
-# todo_sprint 📝
+# Todo Sprint App 📝
 
-Built using the popular Flutter framework. Todo Sprint is an app that helps users organize their tasks and responsibilities in a structured manner. It allows users to create, track, and prioritize tasks, ensuring efficient task management and productivity.
+Todo Sprint is a simple and efficient todo app built with Flutter using Clean Architecture principles. It allows you to manage your tasks, and stay organized throughout the day. The app follows the BLoC pattern for state management and utilizes Hive for local data storage.
 
-### Some concepts that were utilised in the development of this app
-- Bloc State management
-- Complete Clean Architecture as introduced by Uncle Bob (Robert C. Martin)
-- Unit Testing. 100% Test Coverage
-- SOLID Principles
+![Todo Sprint App](todo_sprint_app.gif)
+
+## Screenshots
+
+![Screenshot 1](screenshots/screenshot1.png)
+![Screenshot 2](screenshots/screenshot2.png)
+![Screenshot 3](screenshots/screenshot3.png)
+
+## Features
+
+- Create new tasks with a title and description.
+- Mark tasks as completed or uncompleted.
+- View a list of all tasks.
+- Delete completed tasks.
+- Switch between light and dark themes.
+
+## Getting Started
+
+Follow these instructions to get the app up and running on your local machine.
+
+### Prerequisites
+
+Before running the app, make sure you have Flutter installed on your system. If you haven't installed Flutter yet, follow the official Flutter installation guide: [Flutter Installation](https://flutter.dev/docs/get-started/install)
+
+### Installing
+
+1. Clone this repository to your local machine using Git:
+
+```
+git clone https://github.com/eliascreates/todo-sprint.git
+```
+
+2. Change to the project directory:
+
+```
+cd todo-sprint
+```
+
+3. Install the required dependencies:
+
+```
+flutter pub get
+```
+
+4. Run the app:
+
+```
+flutter run
+```
+
+The app should now be running on your emulator or connected device.
+
+## Folder Structure
+
+The project follows a Clean Architecture structure to separate concerns and make the codebase maintainable and scalable.
+
+- `lib/` contains the application code.
+  - `feature/` contains the features in the application.
+    - `todo/` contains the todo feature with CRUD operations
+        - `data/` contains the data layer with repository and data sources implementations.
+        - `domain/` contains the domain layer with entities, use cases, and repositories interfaces.
+        - `presentation/` contains the presentation layer with the UI, BLoCs, and other UI-related components.
+
+## State Management
+
+The app uses the BLoC (Business Logic Component) pattern for state management. BLoC allows for separation of UI and business logic and provides a clean way to manage the state of the application.
+
+## Data Storage
+
+The app uses Hive as the local data storage solution for storing todo items. Hive is a lightweight and fast NoSQL database that works well with Flutter apps.
+
+## Themes
+
+Todo Sprint offers both light and dark themes to provide a personalized user experience. You can switch between themes from the app settings.
+
 
 ## Getting Started
 

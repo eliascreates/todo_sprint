@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:todo_sprint/core/constants/colors.dart';
+import 'package:todo_sprint/core/constants/values.dart';
 
 import '../../domain/entities/todo.dart';
 
@@ -27,7 +29,7 @@ class TodoListTile extends StatelessWidget {
       onDismissed: onDismiss,
       direction: DismissDirection.endToStart,
       child: Container(
-        margin: const EdgeInsets.all(10),
+        margin: const EdgeInsets.all(Values.defaultPadding / 2),
         decoration: BoxDecoration(
           color: theme.cardColor,
           boxShadow: [
@@ -38,14 +40,16 @@ class TodoListTile extends StatelessWidget {
               offset: const Offset(0, 2),
             ),
           ],
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(Values.defaultPadding),
         ),
         child: ListTile(
           onTap: onTap,
           isThreeLine: true,
           shape: ContinuousRectangleBorder(
-              borderRadius: BorderRadius.circular(30)),
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+              borderRadius: BorderRadius.circular(Values.defaultPadding * 1.5)),
+          contentPadding: const EdgeInsets.symmetric(
+            horizontal: Values.defaultPadding / 2,
+          ),
           title: Text(
             todo.title,
             maxLines: 1,
@@ -64,14 +68,14 @@ class TodoListTile extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
               ),
-              const SizedBox(width: 10),
+              const SizedBox(width: Values.defaultPadding / 2),
               const Divider(thickness: 1),
               Row(
                 children: [
                   const Icon(Icons.calendar_month, size: 15),
-                  const SizedBox(width: 10),
+                  const SizedBox(width: Values.defaultPadding / 2),
                   Text(
-                    todo.formatDate(todo.dateUpdated),
+                    todo.formatUpdatedDate(),
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
                     style: theme.textTheme.bodySmall,
@@ -84,6 +88,7 @@ class TodoListTile extends StatelessWidget {
             scale: 1.2,
             child: Checkbox(
               shape: const CircleBorder(),
+              activeColor: AppColors.lSecondaryColor,
               value: todo.isCompleted,
               onChanged: onToggleComplete,
             ),
@@ -92,7 +97,8 @@ class TodoListTile extends StatelessWidget {
               ? null
               : PopupMenuButton(
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20)),
+                      borderRadius:
+                          BorderRadius.circular(Values.defaultPadding)),
                   itemBuilder: (context) => popupItems!,
                 ),
         ),
