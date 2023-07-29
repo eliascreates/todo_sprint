@@ -1,22 +1,29 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'package:equatable/equatable.dart';
+import 'package:hive/hive.dart';
 import 'package:intl/intl.dart';
 
-class Todo extends Equatable {
-  final String id;
-  final String title;
-  final String description;
-  final bool isCompleted;
-  final String dateCreated;
-  final String dateUpdated;
+part 'todo.g.dart';
 
-  String formatDate(String date) {
-    DateTime dateTime = DateTime.parse(date);
-    String formatted = DateFormat('MM/dd/yyyy h:mm a').format(dateTime);
-    return formatted; //* Output: 07/16/2023 6:42 PM
-  }
+@HiveType(typeId: 0)
+class Todo extends HiveObject {
+  @HiveField(0)
+  String id;
 
-  const Todo({
+  @HiveField(1)
+  String title;
+
+  @HiveField(2)
+  String description;
+
+  @HiveField(3)
+  bool isCompleted;
+
+  @HiveField(4)
+  String dateCreated;
+
+  @HiveField(5)
+  String dateUpdated;
+
+  Todo({
     required this.id,
     required this.title,
     required this.description,
@@ -25,7 +32,104 @@ class Todo extends Equatable {
     this.isCompleted = false,
   });
 
+  String formatUpdatedDate() {
+    DateTime now = DateTime.now();
+    DateTime dateTime = DateTime.parse(dateUpdated);
+
+    int differenceInDays = now.difference(dateTime).inDays.abs();
+
+    if (differenceInDays == 0) {
+      if (dateTime.day != now.day) {
+        return 'Yesterday - ${DateFormat('h:mm a').format(dateTime)}';
+      }
+      return 'Today - ${DateFormat('h:mm a').format(dateTime)}';
+    } else if (differenceInDays == 1) {
+      if (dateTime.day != now.day) {
+        return '2 days ago - ${DateFormat('h:mm a').format(dateTime)}';
+      }
+      return 'Yesterday - ${DateFormat('h:mm a').format(dateTime)}';
+    } else if (differenceInDays <= 7) {
+      return '$differenceInDays days ago - ${DateFormat('h:mm a').format(dateTime)}';
+    } else {
+      return DateFormat('MMM d, y, h:mm a').format(dateTime);
+    }
+  }
+
+  String formatCreatedDate() {
+    DateTime now = DateTime.now();
+    DateTime dateTime = DateTime.parse(dateCreated);
+
+    int differenceInDays = now.difference(dateTime).inDays.abs();
+
+    if (differenceInDays < 365) {
+      return DateFormat('d MMM, h:mm a').format(dateTime);
+    }
+    return DateFormat('d MMM, y, h:mm a').format(dateTime);
+  }
+
+  Todo copyWith({
+    String? id,
+    String? title,
+    String? description,
+    bool? isCompleted,
+    String? dateCreated,
+    String? dateUpdated,
+  }) {
+    return Todo(
+      id: id ?? this.id,
+      title: title ?? this.title,
+      description: description ?? this.description,
+      isCompleted: isCompleted ?? this.isCompleted,
+      dateCreated: dateCreated ?? this.dateCreated,
+      dateUpdated: dateUpdated ?? this.dateCreated,
+    );
+  }
+
+  factory Todo.fromJson(Map<String, dynamic> map) {
+    return Todo(
+      id: map['_id'],
+      title: map['title'],
+      description: map['description'],
+      isCompleted: map['is_completed'],
+      dateCreated: map['created_at'],
+      dateUpdated: map['updated_at'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'title': title,
+      'description': description,
+      'is_completed': isCompleted,
+    };
+  }
+
   @override
-  List<Object?> get props =>
-      [id, title, description, isCompleted, dateCreated, dateUpdated];
+  String toString() {
+    return 'Todo(id: $id, title: $title, description: $description, '
+        'isCompleted: $isCompleted, dateCreated: $dateCreated, dateUpdated: $dateUpdated)';
+  }
+
+  @override
+  bool operator ==(covariant Todo other) {
+    if (identical(this, other)) return true;
+
+    return other.id == id &&
+        other.title == title &&
+        other.description == description &&
+        other.isCompleted == isCompleted &&
+        other.dateCreated == dateCreated &&
+        other.dateUpdated == dateUpdated;
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+        title.hashCode ^
+        description.hashCode ^
+        isCompleted.hashCode ^
+        dateCreated.hashCode ^
+        dateUpdated.hashCode;
+  }
 }

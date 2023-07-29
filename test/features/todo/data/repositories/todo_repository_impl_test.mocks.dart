@@ -6,12 +6,9 @@
 import 'dart:async' as _i4;
 
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:todo_sprint/core/network/network_info.dart' as _i6;
 import 'package:todo_sprint/features/todo/data/datasources/todo_local_data_source.dart'
     as _i3;
-import 'package:todo_sprint/features/todo/data/datasources/todo_remote_data_source.dart'
-    as _i5;
-import 'package:todo_sprint/features/todo/data/models/todo_model.dart' as _i2;
+import 'package:todo_sprint/features/todo/domain/entities/todo.dart' as _i2;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -24,8 +21,8 @@ import 'package:todo_sprint/features/todo/data/models/todo_model.dart' as _i2;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeTodoModel_0 extends _i1.SmartFake implements _i2.TodoModel {
-  _FakeTodoModel_0(
+class _FakeTodo_0 extends _i1.SmartFake implements _i2.Todo {
+  _FakeTodo_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -44,57 +41,83 @@ class MockTodoLocalDataSource extends _i1.Mock
   }
 
   @override
-  _i4.Future<List<_i2.TodoModel>> getAllTodos() => (super.noSuchMethod(
+  _i4.Future<List<_i2.Todo>> getAllTodos() => (super.noSuchMethod(
         Invocation.method(
           #getAllTodos,
           [],
         ),
-        returnValue: _i4.Future<List<_i2.TodoModel>>.value(<_i2.TodoModel>[]),
-      ) as _i4.Future<List<_i2.TodoModel>>);
+        returnValue: _i4.Future<List<_i2.Todo>>.value(<_i2.Todo>[]),
+      ) as _i4.Future<List<_i2.Todo>>);
   @override
-  _i4.Future<_i2.TodoModel> getTodoById(String? todoId) => (super.noSuchMethod(
+  _i4.Future<_i2.Todo> getTodoById(String? todoId) => (super.noSuchMethod(
         Invocation.method(
           #getTodoById,
           [todoId],
         ),
-        returnValue: _i4.Future<_i2.TodoModel>.value(_FakeTodoModel_0(
+        returnValue: _i4.Future<_i2.Todo>.value(_FakeTodo_0(
           this,
           Invocation.method(
             #getTodoById,
             [todoId],
           ),
         )),
-      ) as _i4.Future<_i2.TodoModel>);
+      ) as _i4.Future<_i2.Todo>);
   @override
-  _i4.Future<_i2.TodoModel> createTodo(_i2.TodoModel? todo) =>
+  _i4.Future<_i2.Todo> createTodo({
+    required String? title,
+    required String? description,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #createTodo,
-          [todo],
+          [],
+          {
+            #title: title,
+            #description: description,
+          },
         ),
-        returnValue: _i4.Future<_i2.TodoModel>.value(_FakeTodoModel_0(
+        returnValue: _i4.Future<_i2.Todo>.value(_FakeTodo_0(
           this,
           Invocation.method(
             #createTodo,
-            [todo],
+            [],
+            {
+              #title: title,
+              #description: description,
+            },
           ),
         )),
-      ) as _i4.Future<_i2.TodoModel>);
+      ) as _i4.Future<_i2.Todo>);
   @override
-  _i4.Future<_i2.TodoModel> updateTodo(_i2.TodoModel? todo) =>
+  _i4.Future<_i2.Todo> updateTodo(
+    String? todoId, {
+    String? title,
+    String? description,
+    bool? isComplete,
+  }) =>
       (super.noSuchMethod(
         Invocation.method(
           #updateTodo,
-          [todo],
+          [todoId],
+          {
+            #title: title,
+            #description: description,
+            #isComplete: isComplete,
+          },
         ),
-        returnValue: _i4.Future<_i2.TodoModel>.value(_FakeTodoModel_0(
+        returnValue: _i4.Future<_i2.Todo>.value(_FakeTodo_0(
           this,
           Invocation.method(
             #updateTodo,
-            [todo],
+            [todoId],
+            {
+              #title: title,
+              #description: description,
+              #isComplete: isComplete,
+            },
           ),
         )),
-      ) as _i4.Future<_i2.TodoModel>);
+      ) as _i4.Future<_i2.Todo>);
   @override
   _i4.Future<String> deleteTodo(String? todoId) => (super.noSuchMethod(
         Invocation.method(
@@ -103,90 +126,4 @@ class MockTodoLocalDataSource extends _i1.Mock
         ),
         returnValue: _i4.Future<String>.value(''),
       ) as _i4.Future<String>);
-}
-
-/// A class which mocks [TodoRemoteDataSource].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockTodoRemoteDataSource extends _i1.Mock
-    implements _i5.TodoRemoteDataSource {
-  MockTodoRemoteDataSource() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i4.Future<List<_i2.TodoModel>> getAllTodos() => (super.noSuchMethod(
-        Invocation.method(
-          #getAllTodos,
-          [],
-        ),
-        returnValue: _i4.Future<List<_i2.TodoModel>>.value(<_i2.TodoModel>[]),
-      ) as _i4.Future<List<_i2.TodoModel>>);
-  @override
-  _i4.Future<_i2.TodoModel> getTodoById(String? todoId) => (super.noSuchMethod(
-        Invocation.method(
-          #getTodoById,
-          [todoId],
-        ),
-        returnValue: _i4.Future<_i2.TodoModel>.value(_FakeTodoModel_0(
-          this,
-          Invocation.method(
-            #getTodoById,
-            [todoId],
-          ),
-        )),
-      ) as _i4.Future<_i2.TodoModel>);
-  @override
-  _i4.Future<_i2.TodoModel> createTodo(_i2.TodoModel? todo) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #createTodo,
-          [todo],
-        ),
-        returnValue: _i4.Future<_i2.TodoModel>.value(_FakeTodoModel_0(
-          this,
-          Invocation.method(
-            #createTodo,
-            [todo],
-          ),
-        )),
-      ) as _i4.Future<_i2.TodoModel>);
-  @override
-  _i4.Future<_i2.TodoModel> updateTodo(_i2.TodoModel? todo) =>
-      (super.noSuchMethod(
-        Invocation.method(
-          #updateTodo,
-          [todo],
-        ),
-        returnValue: _i4.Future<_i2.TodoModel>.value(_FakeTodoModel_0(
-          this,
-          Invocation.method(
-            #updateTodo,
-            [todo],
-          ),
-        )),
-      ) as _i4.Future<_i2.TodoModel>);
-  @override
-  _i4.Future<String> deleteTodo(String? todoId) => (super.noSuchMethod(
-        Invocation.method(
-          #deleteTodo,
-          [todoId],
-        ),
-        returnValue: _i4.Future<String>.value(''),
-      ) as _i4.Future<String>);
-}
-
-/// A class which mocks [NetworkInfo].
-///
-/// See the documentation for Mockito's code generation for more information.
-class MockNetworkInfo extends _i1.Mock implements _i6.NetworkInfo {
-  MockNetworkInfo() {
-    _i1.throwOnMissingStub(this);
-  }
-
-  @override
-  _i4.Future<bool> get isConnected => (super.noSuchMethod(
-        Invocation.getter(#isConnected),
-        returnValue: _i4.Future<bool>.value(false),
-      ) as _i4.Future<bool>);
 }

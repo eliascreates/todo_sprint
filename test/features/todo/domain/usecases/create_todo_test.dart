@@ -5,9 +5,6 @@ import 'package:todo_sprint/features/todo/domain/usecases/create_todo.dart';
 import 'package:mockito/mockito.dart';
 import 'get_all_todo_test.mocks.dart';
 
-
-
-// @GenerateMocks([TodoRepository])
 void main() {
   late MockTodoRepository mockTodoRepository;
   late CreateTodo usecase;
@@ -18,7 +15,7 @@ void main() {
     usecase = CreateTodo(mockTodoRepository);
   });
 
-  const testTodo = Todo(
+  final testTodo = Todo(
       id: '1',
       title: 'test title',
       description: 'test description',
@@ -26,15 +23,15 @@ void main() {
       dateUpdated: 'test dateUpdated');
   test('should create a new todo', () async {
     //Arrange
-    when(mockTodoRepository.createTodo(testTodo))
-        .thenAnswer((_) async => const Right(testTodo));
+    when(mockTodoRepository.createTodo(title: testTodo.title, description: testTodo.description))
+        .thenAnswer((_) async => Right(testTodo));
 
     //Act
-    final result = await usecase(const Params(todo: testTodo));
+    final result = await usecase(Params(title: testTodo.title, description: testTodo.description));
 
     //Assert
-    expect(result, const Right(testTodo));
-    verify(mockTodoRepository.createTodo(testTodo));
+    expect(result, Right(testTodo));
+    verify(mockTodoRepository.createTodo(title: testTodo.title, description: testTodo.description));
     verifyNoMoreInteractions(mockTodoRepository);
   });
 }

@@ -4,15 +4,16 @@ sealed class TodoEvent extends Equatable {
   const TodoEvent();
 
   @override
-  List<Object> get props => [];
+  List<Object?> get props => [];
 }
 
 class TodoCreated extends TodoEvent {
-  final Todo todo;
+  final String title;
+  final String description;
 
-  const TodoCreated({required this.todo});
+  const TodoCreated({required this.title, required this.description});
   @override
-  List<Object> get props => [todo];
+  List<Object> get props => [title, description];
 }
 
 class TodoFetchedAll extends TodoEvent {
@@ -29,26 +30,18 @@ class TodoByIdFetched extends TodoEvent {
 }
 
 class TodoUpdated extends TodoEvent {
-  const TodoUpdated({required this.todo});
+  const TodoUpdated(
+      {required this.todoId, this.title, this.description, this.isComplete});
 
-  final Todo todo;
-
-  @override
-  List<Object> get props => [todo];
-}
-
-class TodoToggleCompleted extends TodoEvent {
-  const TodoToggleCompleted({required this.todo});
-
-  final Todo todo;
+  final String todoId;
+  final String? title;
+  final String? description;
+  final bool? isComplete;
 
   @override
-  List<Object> get props => [todo];
+  List<Object?> get props => [todoId, title, description, isComplete];
 }
 
-class TodoClearCompleted extends TodoEvent {
-  const TodoClearCompleted();
-}
 
 class TodoDeleted extends TodoEvent {
   const TodoDeleted({required this.todoId});
@@ -57,4 +50,17 @@ class TodoDeleted extends TodoEvent {
 
   @override
   List<Object> get props => [todoId];
+}
+
+class TodoToggleCompleted extends TodoEvent {
+  const TodoToggleCompleted({required this.todoId});
+
+  final String todoId;
+
+  @override
+  List<Object> get props => [todoId];
+}
+
+class TodoClearCompleted extends TodoEvent {
+  const TodoClearCompleted();
 }
