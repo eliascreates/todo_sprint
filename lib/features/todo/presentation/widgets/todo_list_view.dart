@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:todo_sprint/config/routes/app_routes.dart';
+import 'package:todo_sprint/core/constants/strings.dart';
 import 'package:todo_sprint/core/constants/values.dart';
 import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
 
@@ -21,14 +22,24 @@ class TodoListView extends StatelessWidget {
 
     final sortedTodos = selectedTab == TodoTab.all
         ? todos
-        : todos
-            .where((todo) =>
-                (selectedTab == TodoTab.complete && todo.isCompleted) ||
-                (selectedTab == TodoTab.incomplete && !todo.isCompleted))
-            .toList();
+        : todos.where((todo) {
+            return (selectedTab == TodoTab.complete && todo.isCompleted) ||
+                (selectedTab == TodoTab.incomplete && !todo.isCompleted);
+          }).toList();
 
     final filteredTodos = List.from(sortedTodos);
     filteredTodos.sort((a, b) => b.dateUpdated.compareTo(a.dateUpdated));
+
+    if (filteredTodos.isEmpty) {
+      return SliverFillRemaining(
+        child: Center(
+          child: Text(
+            selectedTab.message,
+            style: theme.textTheme.headlineSmall?.copyWith(color: captionColor),
+          ),
+        ),
+      );
+    }
 
     return SliverList(
       delegate: SliverChildBuilderDelegate(
@@ -48,7 +59,7 @@ class TodoListView extends StatelessWidget {
                     const Icon(Icons.edit),
                     const SizedBox(width: Values.defaultPadding),
                     Text(
-                      'Edit',
+                      Strings.todoHomeMenuEdit,
                       style: TextStyle(color: captionColor),
                     ),
                   ],
@@ -58,12 +69,12 @@ class TodoListView extends StatelessWidget {
                 onTap: () => toggleComplete(context, todo),
                 child: Row(
                   children: [
-                    Icon(
-                      todo.isCompleted ? Icons.close : Icons.done,
-                    ),
+                    Icon(todo.isCompleted ? Icons.close : Icons.done),
                     const SizedBox(width: Values.defaultPadding),
                     Text(
-                      todo.isCompleted ? 'Not Done' : 'Done',
+                      todo.isCompleted
+                          ? Strings.todoHomeMenuNotDone
+                          : Strings.todoHomeMenuDone,
                       style: TextStyle(color: captionColor),
                     ),
                   ],
@@ -76,7 +87,7 @@ class TodoListView extends StatelessWidget {
                     const Icon(Icons.delete),
                     const SizedBox(width: Values.defaultPadding),
                     Text(
-                      'Delete',
+                      Strings.todoHomeMenuDelete,
                       style: TextStyle(color: captionColor),
                     ),
                   ],
@@ -100,5 +111,18 @@ class TodoListView extends StatelessWidget {
 
   void editTodo(BuildContext context, Todo todo) {
     Navigator.of(context).pushNamed(AppRoutes.editPage, arguments: todo);
+  }
+}
+
+extension _EmptyMessage on TodoTab {
+  String get message {
+    switch (this) {
+      case TodoTab.all:
+        return Strings.todoHomeEmptyAll;
+      case TodoTab.complete:
+        return Strings.todoHomeEmptyComplete;
+      case TodoTab.incomplete:
+        return Strings.todoHomeEmptyIncomplete;
+    }
   }
 }

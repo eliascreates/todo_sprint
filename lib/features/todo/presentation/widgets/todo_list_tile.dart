@@ -5,13 +5,14 @@ import 'package:todo_sprint/core/constants/values.dart';
 import '../../domain/entities/todo.dart';
 
 class TodoListTile extends StatelessWidget {
-  const TodoListTile(
-      {super.key,
-      required this.todo,
-      required this.onTap,
-      this.onToggleComplete,
-      this.onDismiss,
-      this.popupItems});
+  const TodoListTile({
+    super.key,
+    required this.todo,
+    required this.onTap,
+    this.onToggleComplete,
+    this.onDismiss,
+    this.popupItems,
+  });
 
   final Todo todo;
   final VoidCallback? onTap;
@@ -97,8 +98,8 @@ class TodoListTile extends StatelessWidget {
               ? null
               : PopupMenuButton(
                   shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(Values.defaultPadding)),
+                    borderRadius: BorderRadius.circular(Values.defaultPadding),
+                  ),
                   itemBuilder: (context) => popupItems!,
                 ),
         ),

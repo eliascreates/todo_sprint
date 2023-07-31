@@ -110,7 +110,11 @@ class _TodoEditViewState extends State<TodoEditView> {
                   },
                   style: ElevatedButton.styleFrom(
                       backgroundColor: Theme.of(context).colorScheme.secondary),
-                  child: Text(isNotEmpty ? "UPDATE" : "CREATE"),
+                  child: Text(
+                    isNotEmpty
+                        ? Strings.todoButtonUpdateLabel
+                        : Strings.todoButtonCreateLabel,
+                  ),
                 )
               ],
             ),

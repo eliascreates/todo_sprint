@@ -5,8 +5,13 @@ import 'package:todo_sprint/features/todo/domain/entities/todo.dart';
 import 'package:todo_sprint/features/todo/presentation/pages/todo_edit_page.dart';
 
 class AppRoutes {
+  //Home Page
   static const String home = '/';
+
+  //Edit Page
   static const String editPage = '/editPage';
+
+  //Settings Page
   static const String settingsPage = 'settings';
 
   const AppRoutes._();

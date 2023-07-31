@@ -9,7 +9,7 @@ class Strings {
   static const tabSettings = 'Settings';
 
   //? Home Page
-  static const homeScreenTitle = 'Todo Sprint';
+  static const homeScreenTitle = 'Todo Sprint  📝';
   static const todoHomeAddTooltip = 'Add Todo';
 
   //Snackbar messages
@@ -18,12 +18,22 @@ class Strings {
 
   // Visual State messages
   static const todoHomeTodoDeletedSnackbarText = 'Todo Deleted!';
-  static const todoHomeEmptyText = 'No Todos!';
+
+  //Empty Todo Messages
+  static const todoHomeEmptyAll = 'No Todos!';
+  static const todoHomeEmptyComplete = 'No Complete Todos!';
+  static const todoHomeEmptyIncomplete = 'No Incomplete Todos!';
 
   static const todoHomeOptionsTooltip = 'Options';
   static const todoHomeOptionsMarkAllIncomplete = 'None';
   static const todoHomeOptionsMarkAllComplete = 'All';
   static const todoHomeOptionsClearCompleted = 'Clear';
+
+  //Show menu
+  static const todoHomeMenuEdit = 'Edit';
+  static const todoHomeMenuNotDone = 'Not Done';
+  static const todoHomeMenuDone = 'Done';
+  static const todoHomeMenuDelete = 'Delete';
 
   //Filter Popup menu
   static const todoHomeFilterTooltip = 'Filter';
@@ -32,12 +42,14 @@ class Strings {
   static const todoHomeFilterShowCompleted = 'Completed';
 
   //? Settings Page
-  static const todoSettingsAppbarTitle = 'Todo Settings';
+  static const todoSettingsAppbarTitle = 'Todo Settings  ⚙️';
 
   //? Edit Page
   static const todoAddAppBarTitle = 'New Todo';
   static const todoEditAppBarTitle = 'Edit Todo';
-
+  
+  static const todoButtonUpdateLabel = 'UPDATE';
+  static const todoButtonCreateLabel = 'CREATE';
 
   // Field Titles
   static const todoEditTitleLabel = 'Title';

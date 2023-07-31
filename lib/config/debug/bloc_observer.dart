@@ -6,18 +6,20 @@ class TodoAppObserver extends BlocObserver {
   void onCreate(BlocBase bloc) {
     super.onCreate(bloc);
 
-    log(bloc.toString());
+    log('onCreate -- bloc: ${bloc.runtimeType}');
   }
 
   @override
   void onChange(BlocBase bloc, Change change) {
     super.onChange(bloc, change);
     log(change.toString());
+    log('onChange -- bloc: ${bloc.runtimeType}');
   }
 
   @override
   void onEvent(Bloc bloc, Object? event) {
     super.onEvent(bloc, event);
     log(event.toString());
+    log('onEvent -- bloc: ${bloc.runtimeType}');
   }
 }
