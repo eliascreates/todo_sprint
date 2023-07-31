@@ -2,13 +2,14 @@
 
 Todo Sprint is a simple and efficient todo app built with Flutter using Clean Architecture principles. It allows you to manage your tasks, and stay organized throughout the day. The app follows the BLoC pattern for state management and utilizes Hive for local data storage.
 
-![Todo Sprint App](todo_sprint_app.gif)
+<img width="650" src="screenshots/todo_sprint_gif.gif"></a>
 
 ## Screenshots
 
-![Screenshot 1](screenshots/screenshot1.png)
-![Screenshot 2](screenshots/screenshot2.png)
-![Screenshot 3](screenshots/screenshot3.png)
+<img width="650" src="screenshots/todo_sprint_theming.png"></a>
+<img width="650" src="screenshots/todo_sprint_screens.png"></a>
+<img width="650" src="screenshots/todo_sprint_project_structure.png"></a>
+<img width="650" src="screenshots/todo_sprint_tests.png"></a>
 
 ## Features
 
