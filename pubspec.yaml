@@ -46,6 +46,7 @@ dependencies:
 
   #svg icons/images
   flutter_svg: ^2.0.7
+  sizer: ^2.0.15
 
   # Launch Screen
 

@@ -35,6 +35,13 @@ class _TodoEditViewState extends State<TodoEditView> {
   String? title, description;
 
   @override
+  void dispose() {
+    _titleController.dispose();
+    _descriptionController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool isNotEmpty = widget.todo != null;
 
